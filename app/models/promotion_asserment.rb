@@ -1,0 +1,2 @@
+class PromotionAsserment < ApplicationRecord
+end
