@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_27_144500) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_27_140332) do
   create_table "addresses", force: :cascade do |t|
     t.string "address"
     t.string "locality"
@@ -60,16 +60,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_27_144500) do
     t.integer "employee_id", null: false
   end
 
-  create_table "courses_people", force: :cascade do |t|
-    t.integer "course_id", null: false
-    t.integer "person_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["course_id", "person_id"], name: "index_courses_people_on_course_id_and_person_id", unique: true
-    t.index ["course_id"], name: "index_courses_people_on_course_id"
-    t.index ["person_id"], name: "index_courses_people_on_person_id"
-  end
-
   create_table "courses_specializations", id: false, force: :cascade do |t|
     t.integer "course_id", null: false
     t.integer "specialization_id", null: false
@@ -117,15 +107,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_27_144500) do
     t.string "type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "address_id"
-    t.integer "role", default: 0
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "archived_at"
+    t.integer "address_id", null: false
     t.index ["address_id"], name: "index_people_on_address_id"
-    t.index ["reset_password_token"], name: "index_people_on_reset_password_token", unique: true
   end
 
   create_table "periods", force: :cascade do |t|
@@ -181,10 +164,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_27_144500) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
   add_foreign_key "classes", "sections"
   add_foreign_key "courses", "rooms"
-  add_foreign_key "courses_people", "courses"
-  add_foreign_key "courses_people", "people"
   add_foreign_key "examinations", "courses"
   add_foreign_key "examinations", "people", column: "employee_id"
   add_foreign_key "grades", "examinations"
