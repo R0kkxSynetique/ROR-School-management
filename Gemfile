@@ -11,6 +11,7 @@ gem "puma", ">= 5.0"
 # Bundle and transpile JavaScript [https://github.com/rails/jsbundling-rails]
 gem "jsbundling-rails"
 # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
+gem "tailwindcss-ruby"
 gem "tailwindcss-rails"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

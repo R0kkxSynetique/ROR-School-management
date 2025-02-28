@@ -321,6 +321,7 @@ DEPENDENCIES
   solid_queue
   sqlite3 (>= 2.1)
   tailwindcss-rails
+  tailwindcss-ruby
   thruster
   tzinfo-data
 
