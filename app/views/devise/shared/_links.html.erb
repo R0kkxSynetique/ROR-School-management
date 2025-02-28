@@ -1,3 +1,7 @@
+<%- if request.path != "/" %>
+  <%= link_to "Back to Home", root_path, class: "block text-blue-400 hover:text-blue-300 transition-colors duration-200 mb-2" %>
+<% end %>
+
 <%- if controller_name != 'sessions' %>
   <%= link_to "Log in", new_session_path(resource_name), class: "block text-blue-400 hover:text-blue-300 transition-colors duration-200" %>
 <% end %>
