@@ -17,13 +17,14 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
   </head>
 
-  <body>
-    <% if notice %><p class="notice"><%= notice %></p><% end %>
-    <% if alert %><p class="alert"><%= alert %></p><% end %>
-    <%= yield %>
+  <body class="min-h-screen bg-gray-50">
+    <% if notice %><p class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg"><%= notice %></p><% end %>
+    <% if alert %><p class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg"><%= alert %></p><% end %>
+    <main class="container mx-auto px-4">
+      <%= yield %>
+    </main>
   </body>
 </html>

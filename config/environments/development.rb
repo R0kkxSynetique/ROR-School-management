@@ -38,7 +38,7 @@ Rails.application.configure do
     port: 465,
     domain: 'r0kkxsynetique.ch',
     user_name: 'info@r0kkxsynetique.ch',
-    password: 'CHANGE',
+    password: 'SuHznT5k7l5vfp',
     authentication: :login,
     ssl: true,
   }
