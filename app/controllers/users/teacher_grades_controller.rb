@@ -15,7 +15,7 @@ class Users::TeacherGradesController < ApplicationController
 
   def create
     @grade = @examination.grades.build(grade_params)
-    @grade.grades_people.build(person: current_user.person)
+    @grade.teachers << current_user.person
 
     if @grade.save
       redirect_to users_examination_path(@examination), notice: "Grade was successfully created."

@@ -2,7 +2,6 @@ class Users::ExaminationsController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_teacher!
   before_action :set_examination, only: [ :show, :edit, :update, :destroy ]
-  before_action :set_course, only: [ :new, :create ]
 
   def index
     @examinations = current_user.person.examinations.includes(:course)
@@ -13,7 +12,7 @@ class Users::ExaminationsController < ApplicationController
   end
 
   def new
-    @examination = Examination.new(course: @course)
+    @examination = Examination.new
   end
 
   def create
@@ -47,10 +46,6 @@ class Users::ExaminationsController < ApplicationController
 
   def set_examination
     @examination = current_user.person.examinations.find(params[:id])
-  end
-
-  def set_course
-    @course = current_user.person.courses.find(params[:course_id])
   end
 
   def examination_params

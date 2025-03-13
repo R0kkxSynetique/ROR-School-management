@@ -51,7 +51,13 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <%= link_to 'Edit', edit_users_examination_grade_path(@examination, grade), class: "text-indigo-600 hover:text-indigo-900" %>
-                <%= link_to 'Delete', users_examination_grade_path(@examination, grade), method: :delete, data: { confirm: 'Are you sure?' }, class: "ml-3 text-red-600 hover:text-red-900" %>
+                <%= button_to users_examination_grade_path(@examination, grade),
+                    method: :delete,
+                    class: "ml-3 text-red-600 hover:text-red-900",
+                    form_class: "inline-block",
+                    data: { turbo_confirm: 'Are you sure?' } do %>
+                  Delete
+                <% end %>
               </td>
             </tr>
           <% end %>
