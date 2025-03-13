@@ -1,5 +1,0 @@
-class AddExaminationToGrades < ActiveRecord::Migration[8.0]
-  def change
-    add_reference :grades, :examination, null: false, foreign_key: true
-  end
-end
