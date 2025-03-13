@@ -5,19 +5,25 @@ class Users::RegistrationsController < Devise::RegistrationsController
       person = Person.find_by(username: sign_up_params[:username])
     end
 
-    if person
-      build_resource(sign_up_params.merge(person: person))
-    else
-      person = Person.create!(
-        status: "pending",
-        address: Address.create!
-      )
-      build_resource(sign_up_params.merge(person: person))
+    unless person
+      set_flash_message! :alert, :person_not_found
+      redirect_to new_user_registration_path
+      return
     end
 
+    if person.user.present?
+      set_flash_message! :alert, :person_already_has_user
+      redirect_to new_user_registration_path
+      return
+    end
+
+    build_resource(sign_up_params)
     resource.save
     yield resource if block_given?
+
     if resource.persisted?
+      person.update!(user: resource)
+
       if resource.active_for_authentication?
         set_flash_message! :notice, :signed_up
         sign_up(resource_name, resource)

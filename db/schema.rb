@@ -10,46 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_06_150004) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_13_160000) do
   create_table "addresses", force: :cascade do |t|
-    t.string "address"
+    t.string "street"
     t.string "locality"
     t.string "postal_code"
     t.string "administrative_area"
     t.string "country"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "classes", force: :cascade do |t|
-    t.string "uid"
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "section_id", null: false
-    t.index ["section_id"], name: "index_classes_on_section_id"
-    t.index ["uid"], name: "index_classes_on_uid", unique: true
-  end
-
-  create_table "classes_courses", id: false, force: :cascade do |t|
-    t.integer "class_id", null: false
-    t.integer "course_id", null: false
-    t.index ["class_id", "course_id"], name: "index_classes_courses_on_class_id_and_course_id"
-    t.index ["course_id", "class_id"], name: "index_classes_courses_on_course_id_and_class_id"
-  end
-
-  create_table "classes_people", id: false, force: :cascade do |t|
-    t.integer "class_id", null: false
-    t.integer "person_id", null: false
-    t.index ["class_id", "person_id"], name: "index_classes_people_on_class_id_and_person_id"
-    t.index ["person_id", "class_id"], name: "index_classes_people_on_person_id_and_class_id"
-  end
-
-  create_table "classes_students", id: false, force: :cascade do |t|
-    t.integer "class_id", null: false
-    t.integer "student_id", null: false
-    t.index ["class_id", "student_id"], name: "index_classes_students_on_class_id_and_student_id"
-    t.index ["student_id", "class_id"], name: "index_classes_students_on_student_id_and_class_id"
   end
 
   create_table "courses", force: :cascade do |t|
@@ -68,6 +37,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_150004) do
     t.integer "person_id", null: false
     t.index ["course_id", "person_id"], name: "index_courses_people_on_course_id_and_person_id"
     t.index ["person_id", "course_id"], name: "index_courses_people_on_person_id_and_course_id"
+  end
+
+  create_table "courses_school_classes", id: false, force: :cascade do |t|
+    t.integer "school_class_id", null: false
+    t.integer "course_id", null: false
+    t.index ["course_id", "school_class_id"], name: "index_courses_school_classes_on_course_id_and_school_class_id"
+    t.index ["school_class_id", "course_id"], name: "index_courses_school_classes_on_school_class_id_and_course_id"
   end
 
   create_table "courses_specializations", id: false, force: :cascade do |t|
@@ -123,6 +99,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_150004) do
     t.index ["username"], name: "index_people_on_username", unique: true
   end
 
+  create_table "people_school_classes", id: false, force: :cascade do |t|
+    t.integer "school_class_id", null: false
+    t.integer "person_id", null: false
+    t.index ["person_id", "school_class_id"], name: "index_people_school_classes_on_person_id_and_school_class_id"
+    t.index ["school_class_id", "person_id"], name: "index_people_school_classes_on_school_class_id_and_person_id"
+  end
+
   create_table "people_specializations", id: false, force: :cascade do |t|
     t.integer "person_id", null: false
     t.integer "specialization_id", null: false
@@ -136,9 +119,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_150004) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "schedule_id", null: false
-    t.integer "classes_id", null: false
-    t.index ["classes_id"], name: "index_periods_on_classes_id"
+    t.integer "school_class_id", null: false
     t.index ["schedule_id"], name: "index_periods_on_schedule_id"
+    t.index ["school_class_id"], name: "index_periods_on_school_class_id"
   end
 
   create_table "promotion_asserments", force: :cascade do |t|
@@ -172,6 +155,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_150004) do
     t.index ["courses_id"], name: "index_schedules_on_courses_id"
   end
 
+  create_table "school_classes", force: :cascade do |t|
+    t.string "uid"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "section_id", null: false
+    t.index ["section_id"], name: "index_school_classes_on_section_id"
+    t.index ["uid"], name: "index_school_classes_on_uid", unique: true
+  end
+
+  create_table "school_classes_students", id: false, force: :cascade do |t|
+    t.integer "school_class_id", null: false
+    t.integer "student_id", null: false
+    t.index ["school_class_id", "student_id"], name: "idx_on_school_class_id_student_id_a1c7b66345"
+    t.index ["student_id", "school_class_id"], name: "idx_on_student_id_school_class_id_9d586321dc"
+  end
+
   create_table "sections", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -193,29 +193,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_150004) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string "current_sign_in_ip"
-    t.string "last_sign_in_ip"
-    t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
-    t.string "unconfirmed_email"
-    t.integer "failed_attempts", default: 0, null: false
-    t.string "unlock_token"
-    t.datetime "locked_at"
-    t.integer "person_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["person_id"], name: "index_users_on_person_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
-  add_foreign_key "classes", "sections"
   add_foreign_key "courses", "rooms"
   add_foreign_key "examinations", "courses"
   add_foreign_key "examinations", "people"
@@ -223,8 +206,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_150004) do
   add_foreign_key "grades", "people", column: "student_id"
   add_foreign_key "people", "addresses"
   add_foreign_key "people", "users"
-  add_foreign_key "periods", "classes", column: "classes_id"
   add_foreign_key "periods", "schedules"
+  add_foreign_key "periods", "school_classes"
   add_foreign_key "schedules", "courses", column: "courses_id"
-  add_foreign_key "users", "people"
+  add_foreign_key "school_classes", "sections"
 end
