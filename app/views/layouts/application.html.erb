@@ -32,7 +32,9 @@
             <div class="hidden space-x-4 sm:ml-6 sm:flex sm:items-center">
               <% if user_signed_in? %>
                 <%= link_to "Dashboard", root_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
-                <%# Add more navigation links here as needed %>
+                <% if current_user.person.is_a?(Student) %>
+                  <%= link_to "My Grades", users_grades_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+                <% end %>
               <% end %>
             </div>
           </div>
