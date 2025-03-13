@@ -29,7 +29,13 @@
             <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
               <%= link_to 'View', users_examination_path(examination), class: "text-indigo-600 hover:text-indigo-900" %>
               <%= link_to 'Edit', edit_users_examination_path(examination), class: "ml-3 text-indigo-600 hover:text-indigo-900" %>
-              <%= link_to 'Delete', users_examination_path(examination), method: :delete, data: { confirm: 'Are you sure?' }, class: "ml-3 text-red-600 hover:text-red-900" %>
+              <%= button_to users_examination_path(examination),
+                  method: :delete,
+                  class: "ml-3 text-red-600 hover:text-red-900",
+                  form_class: "inline-block",
+                  data: { turbo_confirm: 'Are you sure?' } do %>
+                Delete
+              <% end %>
             </td>
           </tr>
         <% end %>
