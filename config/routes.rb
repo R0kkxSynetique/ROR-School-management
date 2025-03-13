@@ -7,6 +7,9 @@ Rails.application.routes.draw do
 
   namespace :users do
     resources :grades, only: [ :index ]
+    resources :examinations do
+      resources :grades, controller: "teacher_grades", except: [ :show ]
+    end
   end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

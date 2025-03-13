@@ -34,6 +34,8 @@
                 <%= link_to "Dashboard", root_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
                 <% if current_user.person.is_a?(Student) %>
                   <%= link_to "My Grades", users_grades_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+                <% elsif current_user.person.is_a?(Employee) %>
+                  <%= link_to "My Examinations", users_examinations_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
                 <% end %>
               <% end %>
             </div>
