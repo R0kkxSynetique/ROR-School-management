@@ -1,46 +1,96 @@
 # Clean the database first to avoid duplicates
+# Delete grades first as they depend on examinations and students
 Grade.delete_all
-Examination.delete_all
-Period.delete_all
-Schedule.delete_all
-# Delete join table associations first
+
+# Delete join table associations next
 ActiveRecord::Base.connection.execute("DELETE FROM courses_school_classes")
 ActiveRecord::Base.connection.execute("DELETE FROM people_school_classes")
 ActiveRecord::Base.connection.execute("DELETE FROM school_classes_students")
 ActiveRecord::Base.connection.execute("DELETE FROM courses_people")
 ActiveRecord::Base.connection.execute("DELETE FROM people_specializations")
+ActiveRecord::Base.connection.execute("DELETE FROM grades_people")
 ActiveRecord::Base.connection.execute("DELETE FROM promotion_asserments_sections")
-# Now delete the main tables
+
+# Delete dependent records
+Examination.delete_all
+Period.delete_all
+Schedule.delete_all
+
+# Delete main tables with foreign key dependencies
 SchoolClass.delete_all
 Course.delete_all
 PromotionAsserment.delete_all
 Section.delete_all
 Room.delete_all
 Specialization.delete_all
-# Delete users and related records last due to foreign key dependencies
-User.delete_all
+
+# Delete people and users last since they have complex relationships
 Person.delete_all
+User.delete_all
 Address.delete_all
 
-# Create addresses first
-addresses = [
-  Address.create!(
-    street: "123 Main St",
-    locality: "Downtown",
-    postal_code: "12345",
-    administrative_area: "State",
-    country: "Country"
-  ),
-  Address.create!(
-    street: "456 Oak Ave",
-    locality: "Uptown",
-    postal_code: "67890",
-    administrative_area: "State",
-    country: "Country"
-  )
-]
+puts "Creating standalone data..."
 
-# Create initial admin person first
+# Create addresses
+addresses = 5.times.map do |i|
+  Address.create!(
+    street: "#{rand(100..999)} #{[ 'Main St', 'Oak Ave', 'Maple Rd', 'Cedar Ln', 'Pine St' ].sample}",
+    locality: [ "Downtown", "Uptown", "Midtown", "West End", "East Side" ].sample,
+    postal_code: rand(10000..99999).to_s,
+    administrative_area: [ "State A", "State B", "State C" ].sample,
+    country: [ "Country A", "Country B" ].sample
+  )
+end
+
+# Create rooms
+rooms = [ "101", "102", "201", "202", "301", "302", "Lab1", "Lab2" ].map do |room_number|
+  Room.create!(
+    name: "SC#{room_number}"
+  )
+end
+
+# Create sections
+sections = [
+  { name: "IT", description: "Information technology and software development" },
+  { name: "Media", description: "Digital media and graphic design" },
+  { name: "Polymechanic", description: "Mechanical engineering and robotics" },
+  { name: "Business", description: "Business administration and management" }
+].map { |section| Section.create!(section) }
+
+# Create specializations
+specializations = [
+  { name: "Web development", description: "Web application development and design" },
+  { name: "Internet of Things", description: "IoT and embedded systems" },
+  { name: "Cyber security", description: "Network security and ethical hacking" },
+  { name: "Graphic design", description: "Digital media and graphic design" },
+  { name: "Mechanical engineering", description: "Mechanical engineering and robotics" },
+  { name: "Digital Marketing", description: "Online marketing and social media" }
+].map { |spec| Specialization.create!(spec) }
+
+# Create courses with rooms assigned
+courses = [
+  { name: "MAW2.1", description: "Software architecture exploration" },
+  { name: "ROR1", description: "Ruby on rails introduction" },
+  { name: "PRW3", description: "Advanced use of web frontend framework" },
+  { name: "FRA", description: "French classes" },
+  { name: "MKG", description: "Marketing analysis" },
+  { name: "MNY", description: "Machinery" },
+  { name: "DBS1", description: "Database Systems" },
+  { name: "NET1", description: "Network Fundamentals" }
+].map { |course| Course.create!(course.merge(status: "active", room: rooms.sample)) }
+
+# Create school classes
+school_classes = sections.flat_map do |section|
+  2.times.map do |i|
+    SchoolClass.create!(
+      uid: "CLS-#{section.name.first(3)}-#{rand(100..999)}",
+      name: "#{section.name} Class #{i + 1}",
+      section: section
+    )
+  end
+end
+
+# Create initial admin and users
 admin_person = Person.create!(
   username: "admin",
   lastname: "Admin",
@@ -52,86 +102,19 @@ admin_person = Person.create!(
   iban: "DE89370400440532013000"
 )
 
-# Then create admin user
 admin_user = User.create!(
   email: "admin@school.edu",
   password: "password123",
   password_confirmation: "password123"
 )
-
-# Link admin person to user
 admin_person.update!(user: admin_user)
 
-# Create rooms
-rooms = [
-  Room.create!(name: "101"),
-  Room.create!(name: "102"),
-  Room.create!(name: "Lab 1"),
-  Room.create!(name: "Auditorium")
-]
-
-# Create sections
-sections = [
-  Section.create!(name: "Computer Science", description: "Technology and programming focused education"),
-  Section.create!(name: "Mathematics", description: "Advanced mathematical studies"),
-  Section.create!(name: "Physics", description: "Physical sciences and experiments")
-]
-
-# Create specializations
-specializations = [
-  Specialization.create!(name: "Web Development", description: "Focus on web technologies"),
-  Specialization.create!(name: "Data Science", description: "Focus on data analysis and ML"),
-  Specialization.create!(name: "Network Security", description: "Focus on cybersecurity")
-]
-
-# Create courses
-courses = rooms.map.with_index do |room, i|
-  Course.create!(
-    name: "Course #{i + 1}",
-    description: "Description for Course #{i + 1}",
-    status: "active",
-    room_id: room.id
-  )
-end
-
-# Create school classes
-school_classes = sections.map do |section|
-  SchoolClass.create!(
-    uid: "CLS-#{section.name.first(3)}-#{rand(100..999)}",
-    name: "#{section.name} Class",
-    section_id: section.id
-  )
-end
-
-# Associate courses with school classes
-school_classes.each do |school_class|
-  school_class.courses << courses.sample(2)
-end
-
-# Create schedules and periods
-courses.each do |course|
-  schedule = Schedule.create!(
-
-    start_time: "09:00",
-    end_time: "10:30",
-    week_day: rand(1..5),
-    courses_id: course.id
-  )
-
-  Period.create!(
-    start_date: Date.today,
-    end_date: 4.months.from_now,
-    schedule_id: schedule.id,
-    school_class_id: school_classes.first.id
-  )
-end
-
-# Create teachers first
-5.times do |i|
+# Create teachers
+teachers = 8.times.map do |i|
   teacher = Person.create!(
     username: "teacher#{i}",
-    lastname: "Teacher#{i}",
-    firstname: "Name#{i}",
+    lastname: Faker::Name.last_name,
+    firstname: Faker::Name.first_name,
     phone_number: "555-000-#{format('%04d', i)}",
     status: "active",
     type: "Employee",
@@ -139,69 +122,116 @@ end
     iban: "DE89370400440532013#{format('%03d', i+1)}"
   )
 
-  # Then create and link user
   user = User.create!(
     email: "teacher#{i}@school.edu",
     password: "password123",
     password_confirmation: "password123"
   )
-
   teacher.update!(user: user)
+  teacher
 end
 
-# Create students first
-5.times do |i|
+# Create students
+students = 20.times.map do |i|
   student = Person.create!(
     username: "student#{i}",
-    lastname: "Student#{i}",
-    firstname: "Name#{i}",
+    lastname: Faker::Name.last_name,
+    firstname: Faker::Name.first_name,
     phone_number: "555-111-#{format('%04d', i)}",
     status: "active",
     type: "Student",
     address: addresses.sample
   )
 
-  # Then create and link user
   user = User.create!(
     email: "student#{i}@school.edu",
     password: "password123",
     password_confirmation: "password123"
   )
-
   student.update!(user: user)
+  student
 end
 
-# Create some examinations and grades
-teacher = Person.where(type: "Employee").first
-students = Person.where(type: "Student")
+puts "Creating relationships..."
 
+# Associate courses with school classes (each class gets 3-5 courses)
+school_classes.each do |school_class|
+  school_class.courses << courses.sample(rand(3..5))
+end
+
+# Create schedules and periods
 courses.each do |course|
-  exam = Examination.create!(
-    title: "#{course.name} Midterm",
-    expected_date: 2.months.from_now,
-    person: teacher,
-    course: course
-  )
-
-  students.each do |student|
-    Grade.create!(
-      value: rand(60..100),
-      effective_date: Date.today,
-      examination_id: exam.id,
-      student_id: student.id
+  rand(2..4).times do
+    schedule = Schedule.create!(
+      start_time: [ "08:00", "10:00", "13:00", "15:00" ].sample,
+      end_time: [ "09:30", "11:30", "14:30", "16:30" ].sample,
+      week_day: rand(1..5),
+      courses_id: course.id
     )
+
+    # Create periods for different school classes
+    school_classes.sample(rand(1..3)).each do |school_class|
+      Period.create!(
+        start_date: Date.today,
+        end_date: [ 3, 4, 6 ].sample.months.from_now,
+        schedule_id: schedule.id,
+        school_class_id: school_class.id
+      )
+    end
   end
 end
 
-# Create promotion requirements
-promotion = PromotionAsserment.create!(
-  effective_date: Date.today,
-  condition: "Minimum grade average of 70%"
-)
+# Assign students to school classes (each student in 1-2 classes)
+students.each do |student|
+  student.school_classes << school_classes.sample(rand(1..2))
+end
 
-# Associate promotion requirements with sections
+# Assign teachers to courses (each teacher teaches 2-4 courses)
+teachers.each do |teacher|
+  teacher.courses << courses.sample(rand(2..4))
+end
+
+# Create examinations and grades
+courses.each do |course|
+  course.people.where(type: 'Employee').each do |teacher|
+    2.times do
+      exam = Examination.create!(
+        title: "#{course.name} #{[ 'Midterm', 'Final', 'Quiz', 'Project' ].sample}",
+        expected_date: rand(1..4).months.from_now,
+        person: teacher,
+        course: course
+      )
+
+      # Create grades for students in the course's school classes
+      course.school_classes.flat_map(&:students).uniq.each do |student|
+        Grade.create!(
+          value: rand(60..100),
+          effective_date: Date.today,
+          examination: exam,
+          student: student
+        )
+      end
+    end
+  end
+end
+
+# Create and associate promotion requirements
 sections.each do |section|
+  promotion = PromotionAsserment.create!(
+    effective_date: Date.today,
+    condition: [ "Minimum grade average of #{rand(65..75)}%",
+               "Pass all core subjects",
+               "Complete required projects" ].sample
+  )
   promotion.sections << section
+end
+
+# Assign specializations to relevant people
+specializations.each do |specialization|
+  # Assign to some teachers
+  specialization.people << teachers.sample(rand(1..3))
+  # Assign to some students
+  specialization.people << students.sample(rand(3..6))
 end
 
 puts "Seed data created successfully!"
