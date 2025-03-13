@@ -109,6 +109,28 @@ admin_user = User.create!(
 )
 admin_person.update!(user: admin_user)
 
+# Create deans
+deans = 2.times.map do |i|
+  dean = Person.create!(
+    username: "dean#{i}",
+    lastname: Faker::Name.last_name,
+    firstname: Faker::Name.first_name,
+    phone_number: "555-999-#{format('%04d', i)}",
+    status: "active",
+    type: "Dean",
+    address: addresses.sample,
+    iban: "DE89370400440532099#{format('%03d', i+1)}"
+  )
+
+  user = User.create!(
+    email: "dean#{i}@school.edu",
+    password: "password123",
+    password_confirmation: "password123"
+  )
+  dean.update!(user: user)
+  dean
+end
+
 # Create teachers
 teachers = 8.times.map do |i|
   teacher = Person.create!(
@@ -204,12 +226,13 @@ courses.each do |course|
 
       # Create grades for students in the course's school classes
       course.school_classes.flat_map(&:students).uniq.each do |student|
-        Grade.create!(
-          value: rand(60..100),
+        grade = Grade.create!(
+          value: (rand(30..60) / 10.0).round(1), # Generates values between 3.0 and 6.0 with 0.1 precision
           effective_date: Date.today,
           examination: exam,
           student: student
         )
+        grade.teachers << teacher
       end
     end
   end
@@ -219,9 +242,9 @@ end
 sections.each do |section|
   promotion = PromotionAsserment.create!(
     effective_date: Date.today,
-    condition: [ "Minimum grade average of #{rand(65..75)}%",
-               "Pass all core subjects",
-               "Complete required projects" ].sample
+    condition: [ "Minimum grade average of 4.0",
+               "Pass all core subjects with minimum 3.5",
+               "Complete required projects with grade 4.0 or higher" ].sample
   )
   promotion.sections << section
 end

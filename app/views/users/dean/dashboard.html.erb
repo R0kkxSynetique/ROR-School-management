@@ -1,0 +1,50 @@
+<% content_for :title, "Dean Dashboard" %>
+
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">Dean Dashboard</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Create Class Card -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-semibold mb-4">Class Management</h2>
+      <p class="text-gray-600 mb-4">Create new classes and manage existing ones</p>
+      <%= link_to "Create New Class", users_dean_new_class_path, 
+          class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    </div>
+
+    <!-- Assign Specialization Card -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-semibold mb-4">Professor Specializations</h2>
+      <p class="text-gray-600 mb-4">Assign specializations to professors</p>
+      <%= link_to "Assign Specialization", users_dean_new_specialization_path,
+          class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    </div>
+
+    <!-- Course Management Card -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-semibold mb-4">Course Management</h2>
+      <p class="text-gray-600 mb-4">View and manage courses</p>
+      <%= link_to "View Courses", courses_path,
+          class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    </div>
+  </div>
+
+  <!-- Recent Actions Section -->
+  <div class="mt-8">
+    <h2 class="text-xl font-semibold mb-4">Recent Classes</h2>
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <ul class="divide-y divide-gray-200">
+        <% SchoolClass.order(created_at: :desc).limit(5).each do |school_class| %>
+          <li class="px-6 py-4 flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-medium text-gray-900"><%= school_class.name %></h3>
+              <p class="text-sm text-gray-500">Section: <%= school_class.section.name %></p>
+            </div>
+            <%= link_to "Assign Students", users_dean_new_student_path(school_class),
+                class: "inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

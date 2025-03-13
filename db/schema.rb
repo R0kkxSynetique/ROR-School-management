@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_13_160000) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_13_191208) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "locality"
@@ -65,7 +65,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_13_160000) do
   end
 
   create_table "grades", force: :cascade do |t|
-    t.integer "value"
+    t.decimal "value", precision: 2, scale: 1
     t.date "effective_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

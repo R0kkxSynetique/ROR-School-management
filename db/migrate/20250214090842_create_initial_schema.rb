@@ -58,7 +58,7 @@ class CreateInitialSchema < ActiveRecord::Migration[8.0]
     end
 
     create_table :grades do |t|
-      t.integer :value
+      t.decimal :value, precision: 2, scale: 1
       t.date :effective_date
       t.timestamps
     end
