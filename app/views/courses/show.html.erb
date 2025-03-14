@@ -3,8 +3,27 @@
 <div class="container mx-auto px-4 py-8">
   <!-- Course Details -->
   <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
-    <div class="px-4 py-5 sm:px-6">
-      <h3 class="text-lg leading-6 font-medium text-gray-900">Course Details</h3>
+    <div class="px-4 py-5 sm:px-6 flex items-center justify-between">
+      <div>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Course Details</h3>
+      </div>
+      <% if current_user.person.is_a?(Dean) %>
+        <div class="flex items-center space-x-4">
+          <%= link_to "Edit Course", users_dean_edit_course_path(@course), 
+              class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+          <% if @course.status == "active" %>
+            <%= button_to "Archive Course", users_dean_archive_course_path(@course), 
+                method: :patch,
+                class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500",
+                data: { confirm: "Are you sure you want to archive this course?" } %>
+          <% else %>
+            <%= button_to "Unarchive Course", users_dean_unarchive_course_path(@course), 
+                method: :patch,
+                class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500",
+                data: { confirm: "Are you sure you want to unarchive this course?" } %>
+          <% end %>
+        </div>
+      <% end %>
     </div>
     <div class="border-t border-gray-200">
       <dl>

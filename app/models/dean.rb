@@ -5,6 +5,11 @@ class Dean < Employee
     course.update(status: "archived")
   end
 
+  def unarchive_course(course)
+    return false unless course.is_a?(Course)
+    course.update(status: "active")
+  end
+
   def assign_specialization_to_professor(specialization, professor)
     return false unless professor.is_a?(Employee)
     professor.specializations << specialization

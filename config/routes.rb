@@ -17,6 +17,14 @@ Rails.application.routes.draw do
     # Dean specific routes
     get "dean/dashboard", to: "dean#dashboard", as: "dean_dashboard"
 
+    # Course management
+    get "dean/courses/new", to: "dean#new_course", as: "dean_new_course"
+    post "dean/courses", to: "dean#create_course", as: "dean_create_course"
+    get "dean/courses/:course_id/edit", to: "dean#edit_course", as: "dean_edit_course"
+    patch "dean/courses/:course_id", to: "dean#update_course", as: "dean_update_course"
+    patch "dean/courses/:course_id/archive", to: "dean#archive_course", as: "dean_archive_course"
+    patch "dean/courses/:course_id/unarchive", to: "dean#unarchive_course", as: "dean_unarchive_course"
+
     # Teacher management
     get "dean/teachers", to: "dean#teachers_index", as: "dean_teachers"
     get "dean/teachers/new", to: "dean#new_teacher", as: "dean_new_teacher"
@@ -39,8 +47,6 @@ Rails.application.routes.draw do
     get "dean/assign_student/:school_class_id", to: "dean#new_student_assignment", as: "dean_new_student"
     post "dean/assign_student/:school_class_id", to: "dean#assign_student", as: "dean_assign_student"
     delete "dean/school_classes/:school_class_id/remove_student/:student_id", to: "dean#remove_student", as: "dean_remove_student"
-
-    post "dean/archive_course/:course_id", to: "dean#archive_course", as: "dean_archive_course"
   end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

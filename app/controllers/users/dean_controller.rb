@@ -2,7 +2,7 @@ class Users::DeanController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_dean!
   before_action :set_dean
-  before_action :set_course, only: [ :archive_course ]
+  before_action :set_course, only: [ :archive_course, :unarchive_course, :edit_course, :update_course ]
   before_action :set_school_class, only: [ :assign_student, :new_student_assignment, :edit_class, :update_class, :delete_class, :remove_student ]
   before_action :set_teacher, only: [ :edit_teacher, :update_teacher, :delete_teacher ]
 
@@ -86,6 +86,42 @@ class Users::DeanController < ApplicationController
       redirect_to courses_path, notice: "Course was successfully archived."
     else
       redirect_to courses_path, alert: "Failed to archive course."
+    end
+  end
+
+  def unarchive_course
+    if @dean.unarchive_course(@course)
+      redirect_to courses_path, notice: "Course was successfully unarchived."
+    else
+      redirect_to courses_path, alert: "Failed to unarchive course."
+    end
+  end
+
+  def new_course
+    @course = Course.new
+    @rooms = Room.all
+  end
+
+  def create_course
+    @course = Course.new(course_params)
+    if @course.save
+      redirect_to course_path(@course), notice: "Course was successfully created."
+    else
+      @rooms = Room.all
+      render :new_course
+    end
+  end
+
+  def edit_course
+    @rooms = Room.all
+  end
+
+  def update_course
+    if @course.update(course_params)
+      redirect_to course_path(@course), notice: "Course was successfully updated."
+    else
+      @rooms = Room.all
+      render :edit_course
     end
   end
 
@@ -205,6 +241,10 @@ class Users::DeanController < ApplicationController
     params.require(:employee).require(:address_attributes).permit(:street, :locality, :postal_code, :administrative_area, :country)
   rescue ActionController::ParameterMissing
     nil
+  end
+
+  def course_params
+    params.require(:course).permit(:name, :description, :room_id)
   end
 
   def load_specializations
