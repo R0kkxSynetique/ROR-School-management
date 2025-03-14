@@ -17,6 +17,14 @@ Rails.application.routes.draw do
     # Dean specific routes
     get "dean/dashboard", to: "dean#dashboard", as: "dean_dashboard"
 
+    # Teacher management
+    get "dean/teachers", to: "dean#teachers_index", as: "dean_teachers"
+    get "dean/teachers/new", to: "dean#new_teacher", as: "dean_new_teacher"
+    post "dean/teachers", to: "dean#create_teacher", as: "dean_create_teacher"
+    get "dean/teachers/:id/edit", to: "dean#edit_teacher", as: "dean_edit_teacher"
+    patch "dean/teachers/:id", to: "dean#update_teacher", as: "dean_update_teacher"
+    delete "dean/teachers/:id", to: "dean#delete_teacher", as: "dean_delete_teacher"
+
     # School Classes management
     get "dean/school_classes", to: "dean#school_classes_index", as: "dean_school_classes"
     get "dean/new_class", to: "dean#new_class", as: "dean_new_class"

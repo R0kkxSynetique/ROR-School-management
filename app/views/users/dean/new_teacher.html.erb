@@ -1,0 +1,13 @@
+<% content_for :title, "Add New Teacher" %>
+
+<div class="container px-4 py-8 mx-auto">
+  <div class="max-w-2xl mx-auto">
+    <h1 class="mb-6 text-2xl font-bold">Add New Teacher</h1>
+
+    <div class="px-4 py-5 bg-white shadow sm:rounded-lg sm:p-6">
+      <%= form_with(model: @teacher, url: users_dean_create_teacher_path, class: "space-y-6") do |f| %>
+        <%= render partial: "teacher_form", locals: { f: f } %>
+      <% end %>
+    </div>
+  </div>
+</div>

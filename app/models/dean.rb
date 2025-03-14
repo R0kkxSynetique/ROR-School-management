@@ -34,4 +34,19 @@ class Dean < Employee
     return false unless school_class.is_a?(SchoolClass)
     school_class.update(attributes)
   end
+
+  def create_teacher(attributes = {})
+    attributes[:type] = "Employee"
+    Employee.create(attributes)
+  end
+
+  def update_teacher(teacher, attributes)
+    return false unless teacher.is_a?(Employee) && !teacher.is_a?(Dean)
+    teacher.update(attributes)
+  end
+
+  def delete_teacher(teacher)
+    return false unless teacher.is_a?(Employee) && !teacher.is_a?(Dean)
+    teacher.destroy
+  end
 end

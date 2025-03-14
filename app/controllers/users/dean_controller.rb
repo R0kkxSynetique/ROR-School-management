@@ -4,6 +4,7 @@ class Users::DeanController < ApplicationController
   before_action :set_dean
   before_action :set_course, only: [ :archive_course ]
   before_action :set_school_class, only: [ :assign_student, :new_student_assignment, :edit_class, :update_class, :delete_class, :remove_student ]
+  before_action :set_teacher, only: [ :edit_teacher, :update_teacher, :delete_teacher ]
 
   def dashboard
     @recent_classes = SchoolClass.order(created_at: :desc).limit(5)
@@ -52,9 +53,9 @@ class Users::DeanController < ApplicationController
     specialization = Specialization.find(params[:specialization_id])
 
     if @dean.assign_specialization_to_professor(specialization, professor)
-      redirect_to professor_path(professor), notice: "Specialization was successfully assigned."
+      redirect_to users_dean_dashboard_path, notice: "Specialization was successfully assigned to #{professor.firstname} #{professor.lastname}."
     else
-      redirect_to professor_path(professor), alert: "Failed to assign specialization."
+      redirect_to users_dean_dashboard_path, alert: "Failed to assign specialization."
     end
   end
 
@@ -88,6 +89,48 @@ class Users::DeanController < ApplicationController
     end
   end
 
+  def teachers_index
+    @teachers = Employee.where.not(type: "Dean").includes(:user)
+  end
+
+  def new_teacher
+    @teacher = Employee.new
+    load_specializations
+  end
+
+  def create_teacher
+    @teacher = @dean.create_teacher(teacher_params)
+    if @teacher.persisted?
+      @teacher.specialization_ids = params[:employee][:specialization_ids] if params[:employee][:specialization_ids]
+      redirect_to users_dean_teachers_path, notice: "Teacher was successfully created."
+    else
+      load_specializations
+      render :new_teacher, status: :unprocessable_entity
+    end
+  end
+
+  def edit_teacher
+    load_specializations
+  end
+
+  def update_teacher
+    if @dean.update_teacher(@teacher, teacher_params)
+      @teacher.specialization_ids = params[:employee][:specialization_ids] if params[:employee][:specialization_ids]
+      redirect_to users_dean_teachers_path, notice: "Teacher was successfully updated."
+    else
+      load_specializations
+      render :edit_teacher, status: :unprocessable_entity
+    end
+  end
+
+  def delete_teacher
+    if @dean.delete_teacher(@teacher)
+      redirect_to users_dean_teachers_path, notice: "Teacher was successfully deleted."
+    else
+      redirect_to users_dean_teachers_path, alert: "Failed to delete teacher."
+    end
+  end
+
   private
 
   def ensure_dean!
@@ -108,7 +151,19 @@ class Users::DeanController < ApplicationController
     @school_class = SchoolClass.find(params[:id] || params[:school_class_id])
   end
 
+  def set_teacher
+    @teacher = Employee.where.not(type: "Dean").find(params[:id])
+  end
+
   def school_class_params
     params.require(:school_class).permit(:name, :uid, :section_id)
+  end
+
+  def teacher_params
+    params.require(:employee).permit(:firstname, :lastname, :username, :phone_number, :iban)
+  end
+
+  def load_specializations
+    @specializations = Specialization.all
   end
 end
