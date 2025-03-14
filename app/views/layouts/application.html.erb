@@ -18,6 +18,32 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <style>
+      .dropdown-menu {
+        display: none;
+      }
+      .dropdown-menu.show {
+        display: block;
+      }
+    </style>
+    <script>
+      document.addEventListener('click', function(event) {
+        const dropdowns = document.querySelectorAll('.dropdown');
+        dropdowns.forEach(dropdown => {
+          const button = dropdown.querySelector('button');
+          const menu = dropdown.querySelector('.dropdown-menu');
+          
+          if (event.target === button || button.contains(event.target)) {
+            // Toggle dropdown on button click
+            menu.classList.toggle('show');
+            event.stopPropagation();
+          } else if (!menu.contains(event.target)) {
+            // Close dropdown when clicking outside
+            menu.classList.remove('show');
+          }
+        });
+      });
+    </script>
   </head>
   <body class="min-h-screen text-gray-100 bg-gray-900">
     <nav class="bg-gray-800 shadow-lg">
@@ -37,7 +63,18 @@
                 <% elsif current_user.person.is_a?(Employee) %>
                   <% if current_user.person.is_a?(Dean) %>
                     <%= link_to "Dean Dashboard", users_dean_dashboard_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
-                    <%= link_to "Manage Classes", users_dean_school_classes_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+                    <div class="relative dropdown">
+                      <button type="button" class="flex items-center px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:text-white">
+                        Manage
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                      </button>
+                      <div class="absolute left-0 z-50 w-48 py-2 mt-1 bg-gray-800 rounded-md shadow-xl dropdown-menu">
+                        <%= link_to "Classes", users_dean_school_classes_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700" %>
+                        <%= link_to "Teachers", users_dean_teachers_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700" %>
+                      </div>
+                    </div>
                   <% end %>
                   <%= link_to "My Examinations", users_examinations_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
                 <% end %>
