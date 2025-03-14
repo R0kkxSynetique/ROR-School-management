@@ -17,6 +17,7 @@
             <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Username</th>
             <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Name</th>
             <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Phone</th>
+            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Status</th>
             <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Specializations</th>
             <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Actions</th>
           </tr>
@@ -27,6 +28,11 @@
               <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap"><%= teacher.username %></td>
               <td class="px-6 py-4 text-sm text-gray-900"><%= "#{teacher.firstname} #{teacher.lastname}" %></td>
               <td class="px-6 py-4 text-sm text-gray-900"><%= teacher.phone_number %></td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex px-2 text-xs font-semibold leading-5 rounded-full <%= teacher.status == 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                  <%= teacher.status.capitalize %>
+                </span>
+              </td>
               <td class="px-6 py-4 text-sm text-gray-900">
                 <%= teacher.specializations.map(&:name).join(", ") %>
               </td>
