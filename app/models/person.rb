@@ -5,6 +5,8 @@ class Person < ApplicationRecord
   validates :username, presence: true, uniqueness: true
   validates :status, presence: true
 
+  accepts_nested_attributes_for :address
+
   # STI setup
   self.inheritance_column = "type"
 

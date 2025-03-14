@@ -95,15 +95,37 @@ class Users::DeanController < ApplicationController
 
   def new_teacher
     @teacher = Employee.new
+    @teacher.status = "active"
+    @teacher.build_address
     load_specializations
   end
 
   def create_teacher
-    @teacher = @dean.create_teacher(teacher_params)
-    if @teacher.persisted?
-      @teacher.specialization_ids = params[:employee][:specialization_ids] if params[:employee][:specialization_ids]
-      redirect_to users_dean_teachers_path, notice: "Teacher was successfully created."
+    if address_params
+      existing_address = Address.find_by(
+        street: address_params[:street],
+        locality: address_params[:locality],
+        postal_code: address_params[:postal_code],
+        administrative_area: address_params[:administrative_area],
+        country: address_params[:country]
+      )
+      address = existing_address || Address.create!(address_params)
+
+      teacher_attrs = teacher_params.merge(address: address)
+      @teacher = @dean.create_teacher(teacher_attrs)
+
+      if @teacher.persisted?
+        @teacher.specialization_ids = params[:employee][:specialization_ids] if params[:employee][:specialization_ids]
+        redirect_to users_dean_teachers_path, notice: "Teacher was successfully created."
+      else
+        @teacher.build_address(address_params)
+        load_specializations
+        render :new_teacher, status: :unprocessable_entity
+      end
     else
+      @teacher = Employee.new(teacher_params)
+      @teacher.errors.add(:address, "must be provided")
+      @teacher.build_address
       load_specializations
       render :new_teacher, status: :unprocessable_entity
     end
@@ -114,10 +136,26 @@ class Users::DeanController < ApplicationController
   end
 
   def update_teacher
-    if @dean.update_teacher(@teacher, teacher_params)
-      @teacher.specialization_ids = params[:employee][:specialization_ids] if params[:employee][:specialization_ids]
-      redirect_to users_dean_teachers_path, notice: "Teacher was successfully updated."
+    if address_params
+      existing_address = Address.find_by(
+        street: address_params[:street],
+        locality: address_params[:locality],
+        postal_code: address_params[:postal_code],
+        administrative_area: address_params[:administrative_area],
+        country: address_params[:country]
+      )
+      address = existing_address || Address.create!(address_params)
+
+      if @dean.update_teacher(@teacher, teacher_params.merge(address: address))
+        @teacher.specialization_ids = params[:employee][:specialization_ids] if params[:employee][:specialization_ids]
+        redirect_to users_dean_teachers_path, notice: "Teacher was successfully updated."
+      else
+        @teacher.build_address(address_params)
+        load_specializations
+        render :edit_teacher, status: :unprocessable_entity
+      end
     else
+      @teacher.errors.add(:address, "must be provided")
       load_specializations
       render :edit_teacher, status: :unprocessable_entity
     end
@@ -160,7 +198,13 @@ class Users::DeanController < ApplicationController
   end
 
   def teacher_params
-    params.require(:employee).permit(:firstname, :lastname, :username, :phone_number, :iban)
+    params.require(:employee).permit(:firstname, :lastname, :username, :phone_number, :iban, :status)
+  end
+
+  def address_params
+    params.require(:employee).require(:address_attributes).permit(:street, :locality, :postal_code, :administrative_area, :country)
+  rescue ActionController::ParameterMissing
+    nil
   end
 
   def load_specializations
