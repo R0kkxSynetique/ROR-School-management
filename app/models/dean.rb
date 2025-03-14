@@ -2,7 +2,7 @@ class Dean < Employee
   # A Dean is a special type of Employee that can manage specializations, courses, and classes
   def archive_course(course)
     return false unless course.is_a?(Course)
-    course.update(status: 'archived')
+    course.update(status: "archived")
   end
 
   def assign_specialization_to_professor(specialization, professor)
@@ -17,5 +17,15 @@ class Dean < Employee
   def assign_student_to_class(student, school_class)
     return false unless student.is_a?(Student) && school_class.is_a?(SchoolClass)
     school_class.students << student
+  end
+
+  def delete_school_class(school_class)
+    return false unless school_class.is_a?(SchoolClass)
+    school_class.destroy
+  end
+
+  def update_school_class(school_class, attributes)
+    return false unless school_class.is_a?(SchoolClass)
+    school_class.update(attributes)
   end
 end

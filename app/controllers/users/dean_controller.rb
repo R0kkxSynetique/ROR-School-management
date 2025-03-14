@@ -3,7 +3,15 @@ class Users::DeanController < ApplicationController
   before_action :ensure_dean!
   before_action :set_dean
   before_action :set_course, only: [ :archive_course ]
-  before_action :set_school_class, only: [ :assign_student, :new_student_assignment ]
+  before_action :set_school_class, only: [ :assign_student, :new_student_assignment, :edit_class, :update_class, :delete_class ]
+
+  def dashboard
+    @recent_classes = SchoolClass.order(created_at: :desc).limit(5)
+  end
+
+  def school_classes_index
+    @school_classes = SchoolClass.includes(:section).all
+  end
 
   def new_class
     @school_class = SchoolClass.new
@@ -16,6 +24,22 @@ class Users::DeanController < ApplicationController
     else
       render :new_class, status: :unprocessable_entity
     end
+  end
+
+  def edit_class
+  end
+
+  def update_class
+    if @school_class.update(school_class_params)
+      redirect_to school_class_path(@school_class), notice: "Class was successfully updated."
+    else
+      render :edit_class, status: :unprocessable_entity
+    end
+  end
+
+  def delete_class
+    @school_class.destroy
+    redirect_to users_dean_school_classes_path, notice: "Class was successfully deleted."
   end
 
   def new_specialization_assignment
@@ -55,10 +79,6 @@ class Users::DeanController < ApplicationController
     end
   end
 
-  def dashboard
-    @recent_classes = SchoolClass.order(created_at: :desc).limit(5)
-  end
-
   private
 
   def ensure_dean!
@@ -76,7 +96,7 @@ class Users::DeanController < ApplicationController
   end
 
   def set_school_class
-    @school_class = SchoolClass.find(params[:school_class_id])
+    @school_class = SchoolClass.find(params[:id] || params[:school_class_id])
   end
 
   def school_class_params
