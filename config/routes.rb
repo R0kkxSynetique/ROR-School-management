@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   }
 
   resources :courses, only: [ :index, :show ]
+  resources :school_classes, only: [ :show ]
 
   namespace :users do
     resources :grades, only: [ :index ]

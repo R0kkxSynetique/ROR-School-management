@@ -1,0 +1,62 @@
+<% content_for :title, @school_class.name %>
+
+<div class="container px-4 py-8 mx-auto">
+  <div class="mb-8 overflow-hidden bg-white shadow sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+      <h1 class="text-2xl font-bold text-gray-900"><%= @school_class.name %></h1>
+      <p class="max-w-2xl mt-1 text-sm text-gray-500">Class Details</p>
+    </div>
+    <div class="border-t border-gray-200">
+      <dl>
+        <div class="px-4 py-5 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">UID</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @school_class.uid %></dd>
+        </div>
+        <div class="px-4 py-5 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500">Section</dt>
+          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @school_class.section.name %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <!-- Courses -->
+  <div class="mb-8 overflow-hidden bg-white shadow sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+      <h3 class="text-lg font-medium leading-6 text-gray-900">Courses</h3>
+    </div>
+    <div class="border-t border-gray-200">
+      <ul class="divide-y divide-gray-200">
+        <% @courses.each do |course| %>
+          <li class="px-4 py-3">
+            <div class="text-sm text-gray-900"><%= course.name %></div>
+            <div class="text-sm text-gray-500">Room: <%= course.room.name %></div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Students -->
+  <div class="overflow-hidden bg-white shadow sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+      <h3 class="text-lg font-medium leading-6 text-gray-900">Students</h3>
+      <% if current_user.person.is_a?(Dean) %>
+        <div class="mt-3">
+          <%= link_to "Assign Student", users_dean_new_student_path(@school_class), 
+              class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+        </div>
+      <% end %>
+    </div>
+    <div class="border-t border-gray-200">
+      <ul class="divide-y divide-gray-200">
+        <% @students.each do |student| %>
+          <li class="px-4 py-3">
+            <div class="text-sm text-gray-900"><%= "#{student.firstname} #{student.lastname}" %></div>
+            <div class="text-sm text-gray-500"><%= student.username %></div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
