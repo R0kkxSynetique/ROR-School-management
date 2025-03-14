@@ -30,6 +30,7 @@ Rails.application.routes.draw do
 
     get "dean/assign_student/:school_class_id", to: "dean#new_student_assignment", as: "dean_new_student"
     post "dean/assign_student/:school_class_id", to: "dean#assign_student", as: "dean_assign_student"
+    delete "dean/school_classes/:school_class_id/remove_student/:student_id", to: "dean#remove_student", as: "dean_remove_student"
 
     post "dean/archive_course/:course_id", to: "dean#archive_course", as: "dean_archive_course"
   end

@@ -3,7 +3,7 @@ class Users::DeanController < ApplicationController
   before_action :ensure_dean!
   before_action :set_dean
   before_action :set_course, only: [ :archive_course ]
-  before_action :set_school_class, only: [ :assign_student, :new_student_assignment, :edit_class, :update_class, :delete_class ]
+  before_action :set_school_class, only: [ :assign_student, :new_student_assignment, :edit_class, :update_class, :delete_class, :remove_student ]
 
   def dashboard
     @recent_classes = SchoolClass.order(created_at: :desc).limit(5)
@@ -59,7 +59,7 @@ class Users::DeanController < ApplicationController
   end
 
   def new_student_assignment
-    @students = Student.all
+    @students = Student.where.not(id: @school_class.student_ids)
   end
 
   def assign_student
@@ -68,6 +68,15 @@ class Users::DeanController < ApplicationController
       redirect_to school_class_path(@school_class), notice: "Student was successfully assigned to class."
     else
       redirect_to school_class_path(@school_class), alert: "Failed to assign student to class."
+    end
+  end
+
+  def remove_student
+    student = Student.find(params[:student_id])
+    if @dean.remove_student_from_class(student, @school_class)
+      redirect_to school_class_path(@school_class), notice: "Student was successfully removed from class."
+    else
+      redirect_to school_class_path(@school_class), alert: "Failed to remove student from class."
     end
   end
 

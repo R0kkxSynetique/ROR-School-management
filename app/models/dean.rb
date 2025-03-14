@@ -16,7 +16,13 @@ class Dean < Employee
 
   def assign_student_to_class(student, school_class)
     return false unless student.is_a?(Student) && school_class.is_a?(SchoolClass)
+    return false if school_class.students.include?(student)
     school_class.students << student
+  end
+
+  def remove_student_from_class(student, school_class)
+    return false unless student.is_a?(Student) && school_class.is_a?(SchoolClass)
+    school_class.students.delete(student)
   end
 
   def delete_school_class(school_class)
