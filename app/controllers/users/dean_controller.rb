@@ -100,6 +100,7 @@ class Users::DeanController < ApplicationController
   def new_course
     @course = Course.new
     @rooms = Room.all
+    load_specializations
   end
 
   def create_course
@@ -108,12 +109,14 @@ class Users::DeanController < ApplicationController
       redirect_to course_path(@course), notice: "Course was successfully created."
     else
       @rooms = Room.all
+      load_specializations
       render :new_course
     end
   end
 
   def edit_course
     @rooms = Room.all
+    load_specializations
   end
 
   def update_course
@@ -121,6 +124,7 @@ class Users::DeanController < ApplicationController
       redirect_to course_path(@course), notice: "Course was successfully updated."
     else
       @rooms = Room.all
+      load_specializations
       render :edit_course
     end
   end
@@ -234,7 +238,7 @@ class Users::DeanController < ApplicationController
   end
 
   def teacher_params
-    params.require(:employee).permit(:firstname, :lastname, :username, :phone_number, :iban, :status)
+    params.require(:employee).permit(:firstname, :lastname, :username, :phone_number, :iban, :status, specialization_ids: [])
   end
 
   def address_params
@@ -244,10 +248,10 @@ class Users::DeanController < ApplicationController
   end
 
   def course_params
-    params.require(:course).permit(:name, :description, :room_id)
+    params.require(:course).permit(:name, :description, :room_id, specialization_ids: [])
   end
 
   def load_specializations
-    @specializations = Specialization.all
+    @specializations = Specialization.active
   end
 end
