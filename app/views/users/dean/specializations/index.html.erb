@@ -1,0 +1,76 @@
+<% content_for :title, "Manage Specializations" %>
+
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">Specialization Management</h1>
+    <%= link_to "New Specialization", new_users_dean_specialization_path, 
+        class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+  </div>
+
+  <!-- Active Specializations -->
+  <div class="mb-8">
+    <h2 class="text-xl font-semibold mb-4">Active Specializations</h2>
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @active_specializations.each do |specialization| %>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <%= specialization.name %>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-900">
+                <%= specialization.description %>
+              </td>
+              <td class="px-6 py-4 flex items-center space-x-3">
+                <%= link_to 'Edit', edit_users_dean_specialization_path(specialization), class: "text-blue-600 hover:text-blue-900" %>
+                <%= button_to 'Archive', archive_users_dean_specialization_path(specialization), method: :patch, 
+                    class: "text-red-600 hover:text-red-900 bg-transparent border-0 p-0",
+                    data: { confirm: "Are you sure you want to archive this specialization?" } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Archived Specializations -->
+  <div>
+    <h2 class="text-xl font-semibold mb-4">Archived Specializations</h2>
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @archived_specializations.each do |specialization| %>
+            <tr class="bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= specialization.name %>
+              </td>
+              <td class="px-6 py-4 text-sm text-gray-500">
+                <%= specialization.description %>
+              </td>
+              <td class="px-6 py-4 flex items-center space-x-3">
+                <%= button_to 'Unarchive', unarchive_users_dean_specialization_path(specialization), method: :patch,
+                    class: "text-indigo-600 hover:text-indigo-900 bg-transparent border-0 p-0",
+                    data: { confirm: "Are you sure you want to unarchive this specialization?" } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

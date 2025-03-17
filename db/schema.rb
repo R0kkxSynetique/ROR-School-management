@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_13_191208) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_17_125933) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "locality"
@@ -184,6 +184,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_13_191208) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "archived", default: false, null: false
     t.index ["name"], name: "index_specializations_on_name", unique: true
   end
 

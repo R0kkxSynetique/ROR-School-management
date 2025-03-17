@@ -17,6 +17,15 @@ Rails.application.routes.draw do
     # Dean specific routes
     get "dean/dashboard", to: "dean#dashboard", as: "dean_dashboard"
 
+    namespace :dean do
+      resources :specializations do
+        member do
+          patch :archive
+          patch :unarchive
+        end
+      end
+    end
+
     # Course management
     get "dean/courses/new", to: "dean#new_course", as: "dean_new_course"
     post "dean/courses", to: "dean#create_course", as: "dean_create_course"
