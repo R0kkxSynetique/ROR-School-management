@@ -7,13 +7,13 @@
     <div class="space-y-2">
       <%= f.label :username, "Username (if you already have a profile)", class: "block text-sm font-medium text-gray-300" %>
       <%= f.text_field :username, autocomplete: "username",
-          class: "w-full p-2 mt-1 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+          class: "w-full p-2 mt-1 text-gray-900 bg-white border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
     </div>
 
     <div class="space-y-2">
       <%= f.label :email, class: "block text-sm font-medium text-gray-300" %>
       <%= f.email_field :email, autofocus: true, autocomplete: "email",
-          class: "w-full p-2 mt-1 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+          class: "w-full p-2 mt-1 text-gray-900 bg-white border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
     </div>
 
     <div class="space-y-2">
@@ -22,13 +22,13 @@
         <span class="text-xs text-gray-400">(<%= @minimum_password_length %> characters minimum)</span>
       <% end %>
       <%= f.password_field :password, autocomplete: "new-password",
-          class: "w-full p-2 mt-1 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+          class: "w-full p-2 mt-1 text-gray-900 bg-white border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
     </div>
 
     <div class="space-y-2">
       <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-300" %>
       <%= f.password_field :password_confirmation, autocomplete: "new-password",
-          class: "w-full p-2 mt-1 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+          class: "w-full p-2 mt-1 text-gray-900 bg-white border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
     </div>
 
     <div>

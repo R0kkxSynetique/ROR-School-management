@@ -25,6 +25,8 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :schedules
+
       resources :report_cards, only: [ :index ] do
         collection do
           post :generate
@@ -65,8 +67,6 @@ Rails.application.routes.draw do
     post "dean/assign_student/:school_class_id", to: "dean#assign_student", as: "dean_assign_student"
     delete "dean/school_classes/:school_class_id/remove_student/:student_id", to: "dean#remove_student", as: "dean_remove_student"
   end
-
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
