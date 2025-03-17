@@ -44,8 +44,12 @@
       </div>
 
       <div class="px-4 py-3 text-right bg-gray-50 sm:px-6">
+        <div id="error-message" class="hidden mb-2 text-sm text-red-600">
+          Please select at least one student to generate report cards.
+        </div>
         <%= submit_tag "Generate Report Cards", 
-            class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500",
+            class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed",
+            id: "generate-button",
             data: { disable_with: "Generating..." } %>
       </div>
     </div>
@@ -64,8 +68,34 @@
       }]
     });
 
+    const form = document.getElementById('report-cards-form');
+    const generateButton = document.getElementById('generate-button');
+    const errorMessage = document.getElementById('error-message');
     const selectAllButton = document.getElementById('select-all');
     let allSelected = false;
+
+    // Function to check if any students are selected
+    function checkSelectedStudents() {
+      const checkboxes = document.querySelectorAll('.student-checkbox');
+      const hasSelected = Array.from(checkboxes).some(cb => cb.checked);
+      generateButton.disabled = !hasSelected;
+      errorMessage.classList.toggle('hidden', hasSelected);
+      return hasSelected;
+    }
+
+    // Add event listener for form submission
+    form.addEventListener('submit', function(event) {
+      if (!checkSelectedStudents()) {
+        event.preventDefault();
+      }
+    });
+
+    // Add event listeners for checkbox changes
+    document.addEventListener('change', function(event) {
+      if (event.target.classList.contains('student-checkbox')) {
+        checkSelectedStudents();
+      }
+    });
 
     selectAllButton.addEventListener('click', function() {
       allSelected = !allSelected;
@@ -74,6 +104,10 @@
         checkbox.checked = allSelected;
       });
       selectAllButton.textContent = allSelected ? 'Deselect All' : 'Select All';
+      checkSelectedStudents();
     });
+
+    // Initial check
+    checkSelectedStudents();
   });
 <% end %>

@@ -7,6 +7,11 @@ class Users::Dean::ReportCardsController < ApplicationController
   end
 
   def generate
+    if params[:student_ids].blank?
+      redirect_to users_dean_report_cards_path, alert: "Please select at least one student to generate report cards."
+      return
+    end
+
     @students = Student.find(params[:student_ids])
     respond_to do |format|
       format.pdf do
