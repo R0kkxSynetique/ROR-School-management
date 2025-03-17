@@ -1,0 +1,46 @@
+<% content_for :title, "Manage Sections" %>
+
+<div class="container px-4 py-8 mx-auto">
+  <div class="sm:flex sm:items-center sm:justify-between">
+    <h1 class="text-2xl font-bold">Sections</h1>
+    <div class="mt-4 sm:mt-0">
+      <%= link_to "Add New Section", new_users_dean_section_path, 
+          class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    </div>
+  </div>
+
+  <div class="mt-8 overflow-hidden bg-white shadow sm:rounded-lg">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Name</th>
+            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Description</th>
+            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Classes</th>
+            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @sections.each do |section| %>
+            <tr>
+              <td class="px-6 py-4 text-sm text-gray-900"><%= section.name %></td>
+              <td class="px-6 py-4 text-sm text-gray-900"><%= section.description %></td>
+              <td class="px-6 py-4 text-sm text-gray-900"><%= section.school_classes.count %></td>
+              <td class="flex px-6 py-4 space-x-3 text-sm font-medium whitespace-nowrap">
+                <%= link_to "Edit", edit_users_dean_section_path(section), class: "text-indigo-600 hover:text-indigo-900" %>
+                <%= button_to "Delete", users_dean_section_path(section),
+                    method: :delete,
+                    class: "text-red-600 hover:text-red-900 bg-transparent border-0 p-0 inline",
+                    data: { 
+                      turbo_confirm: section.school_classes.any? ? 
+                        "This section cannot be deleted because it has classes assigned to it." :
+                        "Are you sure you want to delete this section?" 
+                    } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

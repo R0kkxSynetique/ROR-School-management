@@ -30,6 +30,8 @@ Rails.application.routes.draw do
           post :generate
         end
       end
+
+      resources :sections
     end
 
     # Course management
