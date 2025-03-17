@@ -3,7 +3,7 @@ require_relative "boot"
 require "rails"
 
 # Include each railties manually, excluding `active_storage/engine`
-%w(
+%w[
   active_model/railtie
   active_job/railtie
   active_record/railtie
@@ -11,7 +11,7 @@ require "rails"
   action_mailer/railtie
   action_view/railtie
   rails/test_unit/railtie
-).each do |railtie|
+].each do |railtie|
   begin
     require railtie
   rescue LoadError
@@ -31,6 +31,9 @@ module SchoolManagement
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
+
+    # Add the services directory to autoload paths
+    config.autoload_paths << Rails.root.join("app/services")
 
     # Configuration for the application, engines, and railties goes here.
     #

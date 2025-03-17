@@ -1,0 +1,79 @@
+<% content_for :title, "Generate Report Cards" %>
+
+<div class="container px-4 py-8 mx-auto">
+  <div class="mb-6 md:flex md:items-center md:justify-between">
+    <h1 class="text-2xl font-bold">Generate Report Cards</h1>
+  </div>
+
+  <%= form_tag generate_users_dean_report_cards_path(format: :pdf), method: :post, data: { turbo: false }, target: "_blank", id: "report-cards-form" do %>
+    <div class="overflow-hidden bg-white shadow sm:rounded-lg">
+      <div class="p-4 sm:p-6">
+        <div class="flex items-center mb-4">
+          <button type="button" id="select-all" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+            Select All
+          </button>
+        </div>
+
+        <table id="students-table" class="w-full">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Class</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Username</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @school_classes.each do |school_class| %>
+              <% school_class.students.each do |student| %>
+                <tr>
+                  <td class="w-4 p-4">
+                    <%= check_box_tag 'student_ids[]', student.id, false,
+                        class: "student-checkbox focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded" %>
+                  </td>
+                  <td><%= school_class.name %></td>
+                  <td><%= student.firstname %></td>
+                  <td><%= student.lastname %></td>
+                  <td><%= student.username %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="px-4 py-3 text-right bg-gray-50 sm:px-6">
+        <%= submit_tag "Generate Report Cards", 
+            class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500",
+            data: { disable_with: "Generating..." } %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<%= javascript_tag do %>
+  document.addEventListener('DOMContentLoaded', function() {
+    const table = new DataTable('#students-table', {
+      pageLength: 10,
+      lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+      order: [[1, 'asc'], [2, 'asc']],
+      columnDefs: [{
+        targets: 0,
+        orderable: false
+      }]
+    });
+
+    const selectAllButton = document.getElementById('select-all');
+    let allSelected = false;
+
+    selectAllButton.addEventListener('click', function() {
+      allSelected = !allSelected;
+      const checkboxes = document.querySelectorAll('.student-checkbox');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = allSelected;
+      });
+      selectAllButton.textContent = allSelected ? 'Deselect All' : 'Select All';
+    });
+  });
+<% end %>

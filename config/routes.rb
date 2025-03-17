@@ -24,6 +24,12 @@ Rails.application.routes.draw do
           patch :unarchive
         end
       end
+
+      resources :report_cards, only: [ :index ] do
+        collection do
+          post :generate
+        end
+      end
     end
 
     # Course management
