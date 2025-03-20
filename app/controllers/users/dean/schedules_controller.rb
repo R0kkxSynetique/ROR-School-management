@@ -4,13 +4,14 @@ class Users::Dean::SchedulesController < ApplicationController
   before_action :set_schedule, only: [ :edit, :update, :destroy ]
 
   def index
-    @schedules = Schedule.includes(:course, :school_classes).all
+    @schedules = Schedule.includes(:course, :school_classes, :teachers).all
   end
 
   def new
     @schedule = Schedule.new
     @courses = Course.active
     @school_classes = SchoolClass.all
+    @teachers = Employee.where(type: "Employee", status: "active")
   end
 
   def create
@@ -20,6 +21,7 @@ class Users::Dean::SchedulesController < ApplicationController
     else
       @courses = Course.active
       @school_classes = SchoolClass.all
+      @teachers = Employee.where(type: "Employee", status: "active")
       render :new, status: :unprocessable_entity
     end
   end
@@ -27,6 +29,7 @@ class Users::Dean::SchedulesController < ApplicationController
   def edit
     @courses = Course.active
     @school_classes = SchoolClass.all
+    @teachers = Employee.where(type: "Employee", status: "active")
   end
 
   def update
@@ -35,6 +38,7 @@ class Users::Dean::SchedulesController < ApplicationController
     else
       @courses = Course.active
       @school_classes = SchoolClass.all
+      @teachers = Employee.where(type: "Employee", status: "active")
       render :edit, status: :unprocessable_entity
     end
   end
@@ -51,7 +55,7 @@ class Users::Dean::SchedulesController < ApplicationController
   end
 
   def schedule_params
-    params.require(:schedule).permit(:start_time, :end_time, :week_day, :courses_id)
+    params.require(:schedule).permit(:start_time, :end_time, :week_day, :courses_id, teacher_ids: [])
   end
 
   def period_params

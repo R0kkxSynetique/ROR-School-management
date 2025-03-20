@@ -19,6 +19,7 @@
             <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Time</th>
             <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Classes</th>
             <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Room</th>
+            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Teachers</th>
             <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Actions</th>
           </tr>
         </thead>
@@ -34,6 +35,9 @@
                 <%= schedule.school_classes.map(&:name).join(", ") %>
               </td>
               <td class="px-6 py-4 text-sm text-gray-900"><%= schedule.course.room.name %></td>
+              <td class="px-6 py-4 text-sm text-gray-900">
+                <%= schedule.teachers.map { |t| "#{t.firstname} #{t.lastname}" }.join(", ") %>
+              </td>
               <td class="flex px-6 py-4 space-x-3 text-sm font-medium">
                 <%= link_to "Edit", edit_users_dean_schedule_path(schedule), class: "text-indigo-600 hover:text-indigo-900" %>
                 <%= button_to "Delete", users_dean_schedule_path(schedule), 

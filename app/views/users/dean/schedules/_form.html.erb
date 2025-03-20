@@ -55,6 +55,14 @@
           </div>
 
           <div class="col-span-6">
+            <%= f.label :teacher_ids, "Teachers", class: "block text-sm font-medium text-gray-700" %>
+            <%= f.collection_select :teacher_ids, @teachers, :id, ->(t) { "#{t.firstname} #{t.lastname}" }, 
+                {}, 
+                { multiple: true, class: "text-gray-900 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder-gray-400" } %>
+            <p class="mt-2 text-sm text-gray-500">Select one or more teachers that will give this course.</p>
+          </div>
+
+          <div class="col-span-6">
             <%= f.label :school_class_ids, "Classes", class: "block text-sm font-medium text-gray-700" %>
             <%= f.collection_select :school_class_ids, @school_classes, :id, :name, 
                 {}, 

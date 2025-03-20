@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_17_125933) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_20_141943) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "locality"
@@ -155,6 +155,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_17_125933) do
     t.index ["courses_id"], name: "index_schedules_on_courses_id"
   end
 
+  create_table "schedules_teachers", id: false, force: :cascade do |t|
+    t.integer "schedule_id", null: false
+    t.integer "teacher_id", null: false
+    t.index ["schedule_id", "teacher_id"], name: "index_schedules_teachers_on_schedule_id_and_teacher_id", unique: true
+    t.index ["schedule_id"], name: "index_schedules_teachers_on_schedule_id"
+    t.index ["teacher_id", "schedule_id"], name: "index_schedules_teachers_on_teacher_id_and_schedule_id", unique: true
+    t.index ["teacher_id"], name: "index_schedules_teachers_on_teacher_id"
+  end
+
   create_table "school_classes", force: :cascade do |t|
     t.string "uid"
     t.string "name"
@@ -210,5 +219,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_17_125933) do
   add_foreign_key "periods", "schedules"
   add_foreign_key "periods", "school_classes"
   add_foreign_key "schedules", "courses", column: "courses_id"
+  add_foreign_key "schedules_teachers", "people", column: "teacher_id"
+  add_foreign_key "schedules_teachers", "schedules"
   add_foreign_key "school_classes", "sections"
 end
