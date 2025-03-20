@@ -10,17 +10,16 @@ class Users::Dean::SchedulesController < ApplicationController
   def new
     @schedule = Schedule.new
     @courses = Course.active
-    @school_classes = SchoolClass.all
     @teachers = Employee.where(type: "Employee", status: "active")
   end
 
   def create
     @schedule = Schedule.new(schedule_params)
-    if @schedule.save && create_periods
+
+    if @schedule.save
       redirect_to users_dean_schedules_path, notice: "Schedule was successfully created."
     else
       @courses = Course.active
-      @school_classes = SchoolClass.all
       @teachers = Employee.where(type: "Employee", status: "active")
       render :new, status: :unprocessable_entity
     end
@@ -28,16 +27,14 @@ class Users::Dean::SchedulesController < ApplicationController
 
   def edit
     @courses = Course.active
-    @school_classes = SchoolClass.all
     @teachers = Employee.where(type: "Employee", status: "active")
   end
 
   def update
-    if @schedule.update(schedule_params) && update_periods
+    if @schedule.update(schedule_params)
       redirect_to users_dean_schedules_path, notice: "Schedule was successfully updated."
     else
       @courses = Course.active
-      @school_classes = SchoolClass.all
       @teachers = Employee.where(type: "Employee", status: "active")
       render :edit, status: :unprocessable_entity
     end
@@ -56,31 +53,6 @@ class Users::Dean::SchedulesController < ApplicationController
 
   def schedule_params
     params.require(:schedule).permit(:start_time, :end_time, :week_day, :courses_id, teacher_ids: [])
-  end
-
-  def period_params
-    params.require(:schedule).permit(:start_date, :end_date, school_class_ids: [])
-  end
-
-  def create_periods
-    return true unless period_params[:school_class_ids].present?
-
-    period_params[:school_class_ids].each do |school_class_id|
-      period = @schedule.periods.build(
-        start_date: period_params[:start_date],
-        end_date: period_params[:end_date],
-        school_class_id: school_class_id
-      )
-      return false unless period.save
-    end
-    true
-  end
-
-  def update_periods
-    return true unless period_params[:school_class_ids].present?
-
-    @schedule.periods.destroy_all
-    create_periods
   end
 
   def ensure_dean!

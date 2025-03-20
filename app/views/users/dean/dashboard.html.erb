@@ -15,8 +15,16 @@
     <!-- Schedule Management Card -->
     <div class="p-6 bg-white rounded-lg shadow">
       <h2 class="mb-4 text-lg font-semibold text-gray-600">Schedule Management</h2>
-      <p class="mb-4 text-gray-600">Manage class schedules and course timings</p>
+      <p class="mb-4 text-gray-600">Manage weekly time slots for courses</p>
       <%= link_to "Manage Schedules", users_dean_schedules_path,
+          class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    </div>
+
+    <!-- Period Management Card -->
+    <div class="p-6 bg-white rounded-lg shadow">
+      <h2 class="mb-4 text-lg font-semibold text-gray-600">Period Management</h2>
+      <p class="mb-4 text-gray-600">Manage time periods like semesters or trimesters</p>
+      <%= link_to "Manage Periods", users_dean_periods_path,
           class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
     </div>
 

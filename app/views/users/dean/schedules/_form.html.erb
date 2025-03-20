@@ -25,7 +25,7 @@
     <div class="md:grid md:grid-cols-3 md:gap-6">
       <div class="md:col-span-1">
         <h3 class="text-lg font-medium leading-6 text-gray-900">Schedule Details</h3>
-        <p class="mt-1 text-sm text-gray-500">Provide the details for this course schedule.</p>
+        <p class="mt-1 text-sm text-gray-500">Set up the weekly time slot for this course.</p>
       </div>
       <div class="mt-5 md:mt-0 md:col-span-2">
         <div class="grid grid-cols-6 gap-6">
@@ -60,14 +60,6 @@
                 {}, 
                 { multiple: true, class: "text-gray-900 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder-gray-400" } %>
             <p class="mt-2 text-sm text-gray-500">Select one or more teachers that will give this course.</p>
-          </div>
-
-          <div class="col-span-6">
-            <%= f.label :school_class_ids, "Classes", class: "block text-sm font-medium text-gray-700" %>
-            <%= f.collection_select :school_class_ids, @school_classes, :id, :name, 
-                {}, 
-                { multiple: true, class: "text-gray-900 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder-gray-400" } %>
-            <p class="mt-2 text-sm text-gray-500">Select one or more classes that will follow this schedule.</p>
           </div>
         </div>
       </div>
