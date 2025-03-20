@@ -35,6 +35,12 @@ Rails.application.routes.draw do
       end
 
       resources :sections
+
+      resources :students do
+        member do
+          patch :archive
+        end
+      end
     end
 
     # Course management

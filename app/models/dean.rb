@@ -68,4 +68,23 @@ class Dean < Employee
     return false unless teacher.is_a?(Employee) && !teacher.is_a?(Dean)
     teacher.update(attributes)
   end
+
+  def create_student(attributes = {})
+    Student.create(attributes)
+  end
+
+  def update_student(student, attributes)
+    return false unless student.is_a?(Student)
+    student.update(attributes)
+  end
+
+  def archive_student(student)
+    return false unless student.is_a?(Student)
+    student.update(status: "archived")
+  end
+
+  def unarchive_student(student)
+    return false unless student.is_a?(Student)
+    student.update(status: "active")
+  end
 end
