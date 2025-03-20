@@ -9,7 +9,11 @@
     </div>
   </div>
 
+  <!-- Active Classes -->
   <div class="mt-8 overflow-hidden bg-white shadow sm:rounded-lg">
+    <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+      <h2 class="text-lg font-medium text-gray-900">Active Classes</h2>
+    </div>
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
@@ -22,7 +26,7 @@
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          <% @school_classes.each do |school_class| %>
+          <% @active_classes.each do |school_class| %>
             <tr>
               <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap"><%= school_class.uid %></td>
               <td class="px-6 py-4 text-sm text-gray-900"><%= school_class.name %></td>
@@ -31,8 +35,60 @@
               <td class="flex px-6 py-4 space-x-2 text-sm font-medium whitespace-nowrap">
                 <%= link_to "View", school_class_path(school_class), class: "text-indigo-600 hover:text-indigo-900" %> · 
                 <%= link_to "Edit", users_dean_edit_class_path(school_class), class: "text-indigo-600 hover:text-indigo-900" %> · 
-                <%= button_to "Delete", users_dean_delete_class_path(school_class), method: :delete, class: "text-red-600 hover:text-red-900 bg-transparent border-0 p-0 inline", data: { confirm: "Are you sure you want to delete this class? This action cannot be undone." } %>
+                <%= button_to "Archive", users_dean_archive_class_path(school_class), 
+                    method: :patch, 
+                    class: "text-red-600 hover:text-red-900 bg-transparent border-0 p-0 inline", 
+                    data: { confirm: "Are you sure you want to archive this class?" } %>
               </td>
+            </tr>
+          <% end %>
+          <% if @active_classes.empty? %>
+            <tr>
+              <td colspan="5" class="px-6 py-4 text-sm text-gray-500 text-center">No active classes found.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Archived Classes -->
+  <div class="mt-8 overflow-hidden bg-white shadow sm:rounded-lg">
+    <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+      <h2 class="text-lg font-medium text-gray-900">Archived Classes</h2>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">UID</th>
+            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Name</th>
+            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Section</th>
+            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Students</th>
+            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Archived At</th>
+            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @archived_classes.each do |school_class| %>
+            <tr>
+              <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap"><%= school_class.uid %></td>
+              <td class="px-6 py-4 text-sm text-gray-900"><%= school_class.name %></td>
+              <td class="px-6 py-4 text-sm text-gray-900"><%= school_class.section.name %></td>
+              <td class="px-6 py-4 text-sm text-gray-900"><%= school_class.students.count %></td>
+              <td class="px-6 py-4 text-sm text-gray-900"><%= school_class.archived_at&.strftime("%Y-%m-%d %H:%M") %></td>
+              <td class="flex px-6 py-4 space-x-2 text-sm font-medium whitespace-nowrap">
+                <%= link_to "View", school_class_path(school_class), class: "text-indigo-600 hover:text-indigo-900" %> · 
+                <%= button_to "Unarchive", users_dean_unarchive_class_path(school_class), 
+                    method: :patch, 
+                    class: "text-green-600 hover:text-green-900 bg-transparent border-0 p-0 inline", 
+                    data: { confirm: "Are you sure you want to unarchive this class?" } %>
+              </td>
+            </tr>
+          <% end %>
+          <% if @archived_classes.empty? %>
+            <tr>
+              <td colspan="6" class="px-6 py-4 text-sm text-gray-500 text-center">No archived classes found.</td>
             </tr>
           <% end %>
         </tbody>

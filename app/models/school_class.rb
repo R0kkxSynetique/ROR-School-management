@@ -8,4 +8,15 @@ class SchoolClass < ApplicationRecord
   validates :name, presence: true
   validates :uid, presence: true, uniqueness: true
   validates :section, presence: true
+
+  scope :active, -> { where(archived: false) }
+  scope :archived, -> { where(archived: true) }
+
+  def archive!
+    update(archived: true, archived_at: Time.current)
+  end
+
+  def unarchive!
+    update(archived: false, archived_at: nil)
+  end
 end

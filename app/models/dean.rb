@@ -40,9 +40,18 @@ class Dean < Employee
     school_class.students.delete(student)
   end
 
-  def delete_school_class(school_class)
+  def archive_school_class(school_class)
     return false unless school_class.is_a?(SchoolClass)
-    school_class.destroy
+    school_class.archive!
+  end
+
+  def unarchive_school_class(school_class)
+    return false unless school_class.is_a?(SchoolClass)
+    school_class.unarchive!
+  end
+
+  def delete_school_class(school_class)
+    archive_school_class(school_class)
   end
 
   def update_school_class(school_class, attributes)

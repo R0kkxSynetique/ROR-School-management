@@ -62,6 +62,8 @@ Rails.application.routes.draw do
     get "dean/edit_class/:id", to: "dean#edit_class", as: "dean_edit_class"
     patch "dean/update_class/:id", to: "dean#update_class", as: "dean_update_class"
     delete "dean/delete_class/:id", to: "dean#delete_class", as: "dean_delete_class"
+    patch "dean/archive_class/:id", to: "dean#archive_class", as: "dean_archive_class"
+    patch "dean/unarchive_class/:id", to: "dean#unarchive_class", as: "dean_unarchive_class"
 
     get "dean/assign_specialization", to: "dean#new_specialization_assignment", as: "dean_new_specialization"
     post "dean/assign_specialization", to: "dean#assign_specialization", as: "dean_assign_specialization"

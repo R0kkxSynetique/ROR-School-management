@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_20_141943) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_20_141944) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "locality"
@@ -170,6 +170,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_20_141943) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "section_id", null: false
+    t.boolean "archived", default: false, null: false
+    t.datetime "archived_at"
     t.index ["section_id"], name: "index_school_classes_on_section_id"
     t.index ["uid"], name: "index_school_classes_on_uid", unique: true
   end

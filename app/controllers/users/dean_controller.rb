@@ -3,7 +3,7 @@ class Users::DeanController < ApplicationController
   before_action :ensure_dean!
   before_action :set_dean
   before_action :set_course, only: [ :archive_course, :unarchive_course, :edit_course, :update_course ]
-  before_action :set_school_class, only: [ :assign_student, :new_student_assignment, :edit_class, :update_class, :delete_class, :remove_student ]
+  before_action :set_school_class, only: [ :assign_student, :new_student_assignment, :edit_class, :update_class, :delete_class, :archive_class, :unarchive_class, :remove_student ]
   before_action :set_teacher, only: [ :edit_teacher, :update_teacher, :archive_teacher, :unarchive_teacher ]
 
   def dashboard
@@ -11,7 +11,8 @@ class Users::DeanController < ApplicationController
   end
 
   def school_classes_index
-    @school_classes = SchoolClass.includes(:section).all
+    @active_classes = SchoolClass.includes(:section).where(archived: false)
+    @archived_classes = SchoolClass.includes(:section).where(archived: true)
   end
 
   def new_class
@@ -39,8 +40,27 @@ class Users::DeanController < ApplicationController
   end
 
   def delete_class
-    @school_class.destroy
-    redirect_to users_dean_school_classes_path, notice: "Class was successfully deleted."
+    if @dean.delete_school_class(@school_class)
+      redirect_to users_dean_school_classes_path, notice: "Class was successfully archived."
+    else
+      redirect_to users_dean_school_classes_path, alert: "Failed to archive class."
+    end
+  end
+
+  def archive_class
+    if @dean.archive_school_class(@school_class)
+      redirect_to users_dean_school_classes_path, notice: "Class was successfully archived."
+    else
+      redirect_to users_dean_school_classes_path, alert: "Failed to archive class."
+    end
+  end
+
+  def unarchive_class
+    if @dean.unarchive_school_class(@school_class)
+      redirect_to users_dean_school_classes_path, notice: "Class was successfully unarchived."
+    else
+      redirect_to users_dean_school_classes_path, alert: "Failed to unarchive class."
+    end
   end
 
   def new_specialization_assignment
