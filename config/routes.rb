@@ -50,6 +50,8 @@ Rails.application.routes.draw do
     post "dean/teachers", to: "dean#create_teacher", as: "dean_create_teacher"
     get "dean/teachers/:id/edit", to: "dean#edit_teacher", as: "dean_edit_teacher"
     patch "dean/teachers/:id", to: "dean#update_teacher", as: "dean_update_teacher"
+    patch "dean/teachers/:id/archive", to: "dean#archive_teacher", as: "dean_archive_teacher"
+    patch "dean/teachers/:id/unarchive", to: "dean#unarchive_teacher", as: "dean_unarchive_teacher"
     delete "dean/teachers/:id", to: "dean#delete_teacher", as: "dean_delete_teacher"
 
     # School Classes management

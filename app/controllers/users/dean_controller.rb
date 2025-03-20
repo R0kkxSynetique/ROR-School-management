@@ -4,7 +4,7 @@ class Users::DeanController < ApplicationController
   before_action :set_dean
   before_action :set_course, only: [ :archive_course, :unarchive_course, :edit_course, :update_course ]
   before_action :set_school_class, only: [ :assign_student, :new_student_assignment, :edit_class, :update_class, :delete_class, :remove_student ]
-  before_action :set_teacher, only: [ :edit_teacher, :update_teacher, :delete_teacher ]
+  before_action :set_teacher, only: [ :edit_teacher, :update_teacher, :archive_teacher, :unarchive_teacher ]
 
   def dashboard
     @recent_classes = SchoolClass.order(created_at: :desc).limit(5)
@@ -130,7 +130,8 @@ class Users::DeanController < ApplicationController
   end
 
   def teachers_index
-    @teachers = Employee.where.not(type: "Dean").includes(:user)
+    @active_teachers = Employee.where.not(type: "Dean").active.includes(:user, :specializations)
+    @archived_teachers = Employee.where.not(type: "Dean").archived.includes(:user, :specializations)
   end
 
   def new_teacher
@@ -198,6 +199,22 @@ class Users::DeanController < ApplicationController
       @teacher.errors.add(:address, "must be provided")
       load_specializations
       render :edit_teacher, status: :unprocessable_entity
+    end
+  end
+
+  def archive_teacher
+    if @dean.archive_teacher(@teacher)
+      redirect_to users_dean_teachers_path, notice: "Teacher was successfully archived."
+    else
+      redirect_to users_dean_teachers_path, alert: "Failed to archive teacher."
+    end
+  end
+
+  def unarchive_teacher
+    if @dean.unarchive_teacher(@teacher)
+      redirect_to users_dean_teachers_path, notice: "Teacher was successfully unarchived."
+    else
+      redirect_to users_dean_teachers_path, alert: "Failed to unarchive teacher."
     end
   end
 

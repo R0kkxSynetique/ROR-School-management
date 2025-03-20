@@ -9,44 +9,79 @@
     </div>
   </div>
 
-  <div class="mt-8 overflow-hidden bg-white shadow sm:rounded-lg">
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Username</th>
-            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Name</th>
-            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Phone</th>
-            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Status</th>
-            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Specializations</th>
-            <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <% @teachers.each do |teacher| %>
+  <!-- Active Teachers -->
+  <div class="mt-8">
+    <h2 class="text-xl font-semibold mb-4">Active Teachers</h2>
+    <div class="overflow-hidden bg-white shadow sm:rounded-lg">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
             <tr>
-              <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap"><%= teacher.username %></td>
-              <td class="px-6 py-4 text-sm text-gray-900"><%= "#{teacher.firstname} #{teacher.lastname}" %></td>
-              <td class="px-6 py-4 text-sm text-gray-900"><%= teacher.phone_number %></td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span class="inline-flex px-2 text-xs font-semibold leading-5 rounded-full <%= teacher.status == 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
-                  <%= teacher.status.capitalize %>
-                </span>
-              </td>
-              <td class="px-6 py-4 text-sm text-gray-900">
-                <%= teacher.specializations.map(&:name).join(", ") %>
-              </td>
-              <td class="flex px-6 py-4 space-x-2 text-sm font-medium whitespace-nowrap">
-                <%= link_to "Edit", users_dean_edit_teacher_path(teacher), class: "text-indigo-600 hover:text-indigo-900" %> · 
-                <%= button_to "Delete", users_dean_delete_teacher_path(teacher), 
-                    method: :delete, 
-                    class: "text-red-600 hover:text-red-900 bg-transparent border-0 p-0 inline", 
-                    data: { confirm: "Are you sure you want to delete this teacher?" } %>
-              </td>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Username</th>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Name</th>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Phone</th>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Specializations</th>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Actions</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @active_teachers.each do |teacher| %>
+              <tr>
+                <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap"><%= teacher.username %></td>
+                <td class="px-6 py-4 text-sm text-gray-900"><%= "#{teacher.firstname} #{teacher.lastname}" %></td>
+                <td class="px-6 py-4 text-sm text-gray-900"><%= teacher.phone_number %></td>
+                <td class="px-6 py-4 text-sm text-gray-900">
+                  <%= teacher.specializations.map(&:name).join(", ") %>
+                </td>
+                <td class="flex px-6 py-4 space-x-2 text-sm font-medium whitespace-nowrap">
+                  <%= link_to "Edit", users_dean_edit_teacher_path(teacher), class: "text-indigo-600 hover:text-indigo-900" %> · 
+                  <%= button_to "Archive", users_dean_archive_teacher_path(teacher), 
+                      method: :patch, 
+                      class: "text-red-600 hover:text-red-900 bg-transparent border-0 p-0 inline", 
+                      data: { confirm: "Are you sure you want to archive this teacher?" } %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Archived Teachers -->
+  <div class="mt-8">
+    <h2 class="text-xl font-semibold mb-4">Archived Teachers</h2>
+    <div class="overflow-hidden bg-white shadow sm:rounded-lg">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Username</th>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Name</th>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Phone</th>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Specializations</th>
+              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @archived_teachers.each do |teacher| %>
+              <tr>
+                <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap"><%= teacher.username %></td>
+                <td class="px-6 py-4 text-sm text-gray-900"><%= "#{teacher.firstname} #{teacher.lastname}" %></td>
+                <td class="px-6 py-4 text-sm text-gray-900"><%= teacher.phone_number %></td>
+                <td class="px-6 py-4 text-sm text-gray-900">
+                  <%= teacher.specializations.map(&:name).join(", ") %>
+                </td>
+                <td class="flex px-6 py-4 space-x-2 text-sm font-medium whitespace-nowrap">
+                  <%= button_to "Unarchive", users_dean_unarchive_teacher_path(teacher), 
+                      method: :patch, 
+                      class: "text-green-600 hover:text-green-900 bg-transparent border-0 p-0 inline" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

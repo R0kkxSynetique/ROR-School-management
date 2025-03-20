@@ -10,6 +10,16 @@ class Dean < Employee
     course.update(status: "active")
   end
 
+  def archive_teacher(teacher)
+    return false unless teacher.is_a?(Employee) && !teacher.is_a?(Dean)
+    teacher.update(status: "archived")
+  end
+
+  def unarchive_teacher(teacher)
+    return false unless teacher.is_a?(Employee) && !teacher.is_a?(Dean)
+    teacher.update(status: "active")
+  end
+
   def assign_specialization_to_professor(specialization, professor)
     return false unless professor.is_a?(Employee)
     professor.specializations << specialization
@@ -48,10 +58,5 @@ class Dean < Employee
   def update_teacher(teacher, attributes)
     return false unless teacher.is_a?(Employee) && !teacher.is_a?(Dean)
     teacher.update(attributes)
-  end
-
-  def delete_teacher(teacher)
-    return false unless teacher.is_a?(Employee) && !teacher.is_a?(Dean)
-    teacher.destroy
   end
 end
