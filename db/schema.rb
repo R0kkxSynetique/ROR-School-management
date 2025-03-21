@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_21_105416) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_20_141944) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "locality"
@@ -126,12 +126,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_105416) do
 
   create_table "promotion_asserments", force: :cascade do |t|
     t.date "effective_date"
+    t.string "condition"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "condition_variable", null: false
-    t.string "condition_operator", null: false
-    t.integer "condition_value", null: false
-    t.text "course_ids"
   end
 
   create_table "promotion_asserments_sections", id: false, force: :cascade do |t|

@@ -18,7 +18,6 @@ Rails.application.routes.draw do
     get "dean/dashboard", to: "dean#dashboard", as: "dean_dashboard"
 
     namespace :dean do
-      resources :promotion_asserments
       resources :specializations do
         member do
           patch :archive
