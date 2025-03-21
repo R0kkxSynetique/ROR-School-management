@@ -21,4 +21,8 @@ class DeanPolicy
   def manage_students?
     user.person.is_a?(Dean)
   end
+
+  def manage_promotion_asserments?
+    user.person.is_a?(Dean)
+  end
 end
