@@ -181,14 +181,30 @@ school_classes.each do |school_class|
   school_class.courses << courses.sample(rand(3..5))
 end
 
+# Assign teachers to courses (each teacher teaches 2-4 courses) - Moved this up
+teachers.each do |teacher|
+  teacher.courses << courses.sample(rand(2..4))
+end
+
 # Create schedules and periods
 courses.each do |course|
   rand(2..4).times do
+    time_slot = [
+      { start: "08:00", end: "09:30" },
+      { start: "10:00", end: "11:30" },
+      { start: "13:00", end: "14:30" },
+      { start: "15:00", end: "16:30" }
+    ].sample
+
+    # Get teachers assigned to this course
+    course_teachers = course.people.where(type: 'Employee')
+
     schedule = Schedule.create!(
-      start_time: [ "08:00", "10:00", "13:00", "15:00" ].sample,
-      end_time: [ "09:30", "11:30", "14:30", "16:30" ].sample,
+      start_time: time_slot[:start],
+      end_time: time_slot[:end],
       week_day: rand(1..5),
-      courses_id: course.id
+      courses_id: course.id,
+      teachers: course_teachers.sample(rand(1..course_teachers.count)) # Assign one or more teachers from the course
     )
 
     # Create periods for different school classes
@@ -208,11 +224,6 @@ students.each do |student|
   student.school_classes << school_classes.sample(rand(1..2))
 end
 
-# Assign teachers to courses (each teacher teaches 2-4 courses)
-teachers.each do |teacher|
-  teacher.courses << courses.sample(rand(2..4))
-end
-
 # Create examinations and grades
 courses.each do |course|
   course.people.where(type: 'Employee').each do |teacher|
@@ -226,13 +237,13 @@ courses.each do |course|
 
       # Create grades for students in the course's school classes
       course.school_classes.flat_map(&:students).uniq.each do |student|
-        grade = Grade.create!(
+        Grade.create!(
           value: (rand(30..60) / 10.0).round(1), # Generates values between 3.0 and 6.0 with 0.1 precision
           effective_date: Date.today,
           examination: exam,
-          student: student
+          student: student,
+          teachers: [ teacher ]  # Include the teacher directly in the creation
         )
-        grade.teachers << teacher
       end
     end
   end
