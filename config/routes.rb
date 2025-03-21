@@ -79,6 +79,13 @@ Rails.application.routes.draw do
     delete "dean/school_classes/:school_class_id/remove_student/:student_id", to: "dean#remove_student", as: "dean_remove_student"
   end
 
+  resources :promotion_asserments do
+    member do
+      get :evaluate_student
+      get :evaluate_section
+    end
+  end
+
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check

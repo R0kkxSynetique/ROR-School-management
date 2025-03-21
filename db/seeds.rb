@@ -259,15 +259,54 @@ courses.each do |course|
   end
 end
 
-# Create and associate promotion requirements
+puts "Creating promotion assessments..."
+# Create promotion assessments with various condition types
 sections.each do |section|
-  promotion = PromotionAsserment.create!(
-    effective_date: Date.today,
-    condition: [ "Minimum grade average of 4.0",
-               "Pass all core subjects with minimum 3.5",
-               "Complete required projects with grade 4.0 or higher" ].sample
-  )
-  promotion.sections << section
+  # Create 2-3 promotion assessments per section
+  rand(2..3).times do |i|
+    promotion = PromotionAsserment.create!(
+      name: "#{section.name} Promotion #{Date.today.year} - Set #{i + 1}",
+      description: "Promotion requirements for #{section.name} students",
+      effective_date: Date.today,
+      active: true,
+      dean: deans.sample
+    )
+
+    # Add section association
+    promotion.sections << section
+
+    # Create overall average condition (always present)
+    PromotionCondition.create!(
+      promotion_asserment: promotion,
+      condition_type: 'overall_average',
+      minimum_grade: 4.0,
+      weight: 1.0,
+      required: true
+    )
+
+    # Create single course conditions for important courses
+    section_courses = section.school_classes.flat_map(&:courses).uniq
+    section_courses.sample(2).each do |course|
+      PromotionCondition.create!(
+        promotion_asserment: promotion,
+        condition_type: 'single_course',
+        minimum_grade: 3.5,
+        weight: 0.7,
+        required: true,
+        courses: [ course ]
+      )
+    end
+
+    # Create one multiple courses condition
+    PromotionCondition.create!(
+      promotion_asserment: promotion,
+      condition_type: 'multiple_courses',
+      minimum_grade: 4.0,
+      weight: 0.5,
+      required: false,
+      courses: section_courses.sample(3)
+    )
+  end
 end
 
 # Assign specializations to relevant people

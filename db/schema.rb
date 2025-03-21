@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_20_141944) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_21_000001) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "locality"
@@ -37,6 +37,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_20_141944) do
     t.integer "person_id", null: false
     t.index ["course_id", "person_id"], name: "index_courses_people_on_course_id_and_person_id"
     t.index ["person_id", "course_id"], name: "index_courses_people_on_person_id_and_course_id"
+  end
+
+  create_table "courses_promotion_conditions", force: :cascade do |t|
+    t.integer "course_id", null: false
+    t.integer "promotion_condition_id", null: false
+    t.index ["course_id", "promotion_condition_id"], name: "idx_courses_conditions"
+    t.index ["course_id"], name: "index_courses_promotion_conditions_on_course_id"
+    t.index ["promotion_condition_id", "course_id"], name: "idx_conditions_courses"
+    t.index ["promotion_condition_id"], name: "index_courses_promotion_conditions_on_promotion_condition_id"
   end
 
   create_table "courses_school_classes", id: false, force: :cascade do |t|
@@ -126,9 +135,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_20_141944) do
 
   create_table "promotion_asserments", force: :cascade do |t|
     t.date "effective_date"
-    t.string "condition"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
+    t.text "description"
+    t.boolean "active", default: true
+    t.integer "dean_id"
+    t.index ["dean_id"], name: "index_promotion_asserments_on_dean_id"
   end
 
   create_table "promotion_asserments_sections", id: false, force: :cascade do |t|
@@ -136,6 +149,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_20_141944) do
     t.integer "promotion_asserment_id", null: false
     t.index ["promotion_asserment_id", "section_id"], name: "idx_promotions_sections"
     t.index ["section_id", "promotion_asserment_id"], name: "idx_sections_promotions"
+  end
+
+  create_table "promotion_conditions", force: :cascade do |t|
+    t.integer "promotion_asserment_id", null: false
+    t.string "condition_type"
+    t.decimal "minimum_grade", precision: 3, scale: 1
+    t.decimal "weight", precision: 3, scale: 2, default: "1.0"
+    t.boolean "required", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["promotion_asserment_id"], name: "index_promotion_conditions_on_promotion_asserment_id"
   end
 
   create_table "rooms", force: :cascade do |t|
@@ -212,6 +236,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_20_141944) do
   end
 
   add_foreign_key "courses", "rooms"
+  add_foreign_key "courses_promotion_conditions", "courses"
+  add_foreign_key "courses_promotion_conditions", "promotion_conditions"
   add_foreign_key "examinations", "courses"
   add_foreign_key "examinations", "people"
   add_foreign_key "grades", "examinations"
@@ -220,6 +246,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_20_141944) do
   add_foreign_key "people", "users"
   add_foreign_key "periods", "schedules"
   add_foreign_key "periods", "school_classes"
+  add_foreign_key "promotion_asserments", "people", column: "dean_id"
+  add_foreign_key "promotion_conditions", "promotion_asserments"
   add_foreign_key "schedules", "courses", column: "courses_id"
   add_foreign_key "schedules_teachers", "people", column: "teacher_id"
   add_foreign_key "schedules_teachers", "schedules"

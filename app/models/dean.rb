@@ -1,5 +1,7 @@
 class Dean < Employee
   # A Dean is a special type of Employee that can manage specializations, courses, and classes
+  has_many :promotion_asserments, dependent: :nullify
+
   def archive_course(course)
     return false unless course.is_a?(Course)
     course.update(status: "archived")
@@ -86,5 +88,17 @@ class Dean < Employee
   def unarchive_student(student)
     return false unless student.is_a?(Student)
     student.update(status: "active")
+  end
+
+  def can_manage_promotions?
+    true
+  end
+
+  def promotion_asserments_for_section(section)
+    promotion_asserments.joins(:sections).where(sections: { id: section.id })
+  end
+
+  def active_promotion_asserments
+    promotion_asserments.where(active: true)
   end
 end
