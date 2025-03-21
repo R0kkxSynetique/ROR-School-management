@@ -1,33 +1,42 @@
 # Clean the database first to avoid duplicates
-# Delete grades first as they depend on examinations and students
-Grade.delete_all
+# Disable foreign key checks to avoid constraint violations
+ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = OFF")
 
-# Delete join table associations next
-ActiveRecord::Base.connection.execute("DELETE FROM courses_school_classes")
-ActiveRecord::Base.connection.execute("DELETE FROM people_school_classes")
-ActiveRecord::Base.connection.execute("DELETE FROM school_classes_students")
-ActiveRecord::Base.connection.execute("DELETE FROM courses_people")
-ActiveRecord::Base.connection.execute("DELETE FROM people_specializations")
-ActiveRecord::Base.connection.execute("DELETE FROM grades_people")
-ActiveRecord::Base.connection.execute("DELETE FROM promotion_asserments_sections")
+# Delete all tables in order
+[
+  'grades_people',
+  'courses_school_classes',
+  'people_school_classes',
+  'school_classes_students',
+  'courses_people',
+  'people_specializations',
+  'promotion_asserments_sections',
+  'courses_specializations',
+  'schedules_teachers'
+].each do |table|
+  ActiveRecord::Base.connection.execute("DELETE FROM #{table}")
+end
 
-# Delete dependent records
-Examination.delete_all
-Period.delete_all
-Schedule.delete_all
+[
+  Grade,
+  Examination,
+  Period,
+  Schedule,
+  SchoolClass,
+  Course,
+  PromotionAsserment,
+  Section,
+  Room,
+  Specialization,
+  User,
+  Person,
+  Address
+].each do |model|
+  model.delete_all
+end
 
-# Delete main tables with foreign key dependencies
-SchoolClass.delete_all
-Course.delete_all
-PromotionAsserment.delete_all
-Section.delete_all
-Room.delete_all
-Specialization.delete_all
-
-# Delete people and users last since they have complex relationships
-Person.delete_all
-User.delete_all
-Address.delete_all
+# Re-enable foreign key checks
+ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = ON")
 
 puts "Creating standalone data..."
 
@@ -198,13 +207,14 @@ courses.each do |course|
 
     # Get teachers assigned to this course
     course_teachers = course.people.where(type: 'Employee')
+    next if course_teachers.empty? # Skip if no teachers are assigned
 
     schedule = Schedule.create!(
       start_time: time_slot[:start],
       end_time: time_slot[:end],
       week_day: rand(1..5),
       courses_id: course.id,
-      teachers: course_teachers.sample(rand(1..course_teachers.count)) # Assign one or more teachers from the course
+      teachers: course_teachers.sample(1) # Always assign at least one teacher
     )
 
     # Create periods for different school classes
