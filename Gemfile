@@ -33,6 +33,7 @@ gem "devise"
 # PDF Generation
 gem "prawn"
 gem "prawn-table"
+gem "cocoon"  # Dynamic nested forms handling
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

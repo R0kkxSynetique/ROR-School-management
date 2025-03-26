@@ -12,7 +12,7 @@ class PromotionAssermentsController < ApplicationController
 
   def new
     @promotion_asserment = current_dean.promotion_asserments.build
-    @promotion_asserment.promotion_conditions.build
+    @promotion_asserment.promotion_conditions.build(condition_type: "single_course")
   end
 
   def create

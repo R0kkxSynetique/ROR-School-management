@@ -3,6 +3,8 @@ class PromotionAsserment < ApplicationRecord
   belongs_to :dean
   has_many :promotion_conditions, dependent: :destroy
 
+  accepts_nested_attributes_for :promotion_conditions, allow_destroy: true, reject_if: :all_blank
+
   validates :name, presence: true
   validates :effective_date, presence: true
 
