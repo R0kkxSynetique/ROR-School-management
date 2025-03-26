@@ -1,44 +1,59 @@
 <% content_for :title, "Manage Teachers" %>
 
 <div class="container px-4 py-8 mx-auto">
-  <div class="sm:flex sm:items-center sm:justify-between">
-    <h1 class="text-2xl font-bold">Teachers</h1>
-    <div class="mt-4 sm:mt-0">
-      <%= link_to "Add New Teacher", users_dean_new_teacher_path, 
-          class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">Teachers</h1>
+      <p class="mt-2 text-sm text-gray-400">Manage and track all teacher records in the system.</p>
+    </div>
+    <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+      <%= link_to users_dean_new_teacher_path, class: "inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500 transition duration-200" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+        </svg>
+        Add Teacher
+      <% end %>
     </div>
   </div>
 
-  <!-- Active Teachers -->
   <div class="mt-8">
-    <h2 class="text-xl font-semibold mb-4">Active Teachers</h2>
-    <div class="overflow-hidden bg-white shadow sm:rounded-lg">
+    <h2 class="text-xl font-semibold text-gray-200 mb-4">Active Teachers</h2>
+    <div class="bg-gray-900 shadow-xl rounded-lg border border-gray-700">
       <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
+        <table class="min-w-full divide-y divide-gray-700">
+          <thead>
             <tr>
-              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Username</th>
-              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Name</th>
-              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Phone</th>
-              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Specializations</th>
-              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Actions</th>
+              <th class="px-6 py-3.5 text-left text-sm font-medium text-gray-200">Username</th>
+              <th class="px-6 py-3.5 text-left text-sm font-medium text-gray-200">Name</th>
+              <th class="px-6 py-3.5 text-left text-sm font-medium text-gray-200">Phone</th>
+              <th class="px-6 py-3.5 text-left text-sm font-medium text-gray-200">Specializations</th>
+              <th class="relative px-6 py-3.5">
+                <span class="sr-only">Actions</span>
+              </th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
+          <tbody class="divide-y divide-gray-700">
             <% @active_teachers.each do |teacher| %>
-              <tr>
-                <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap"><%= teacher.username %></td>
-                <td class="px-6 py-4 text-sm text-gray-900"><%= "#{teacher.firstname} #{teacher.lastname}" %></td>
-                <td class="px-6 py-4 text-sm text-gray-900"><%= teacher.phone_number %></td>
-                <td class="px-6 py-4 text-sm text-gray-900">
+              <tr class="hover:bg-gray-800/50">
+                <td class="px-6 py-4 text-sm text-gray-200 whitespace-nowrap"><%= teacher.username %></td>
+                <td class="px-6 py-4 text-sm text-gray-200"><%= "#{teacher.firstname} #{teacher.lastname}" %></td>
+                <td class="px-6 py-4 text-sm text-gray-200"><%= teacher.phone_number %></td>
+                <td class="px-6 py-4 text-sm text-gray-200">
                   <%= teacher.specializations.map(&:name).join(", ") %>
                 </td>
-                <td class="flex px-6 py-4 space-x-2 text-sm font-medium whitespace-nowrap">
-                  <%= link_to "Edit", users_dean_edit_teacher_path(teacher), class: "text-indigo-600 hover:text-indigo-900" %> · 
-                  <%= button_to "Archive", users_dean_archive_teacher_path(teacher), 
-                      method: :patch, 
-                      class: "text-red-600 hover:text-red-900 bg-transparent border-0 p-0 inline", 
-                      data: { confirm: "Are you sure you want to archive this teacher?" } %>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div class="flex items-center justify-end space-x-3">
+                    <%= link_to users_dean_edit_teacher_path(teacher), class: "text-indigo-400 hover:text-indigo-300 inline-flex items-center" do %>
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                      </svg>
+                    <% end %>
+                    <%= button_to users_dean_archive_teacher_path(teacher), method: :patch, class: "text-red-400 hover:text-red-300 inline-flex items-center" do %>
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+                      </svg>
+                    <% end %>
+                  </div>
                 </td>
               </tr>
             <% end %>
@@ -48,34 +63,37 @@
     </div>
   </div>
 
-  <!-- Archived Teachers -->
   <div class="mt-8">
-    <h2 class="text-xl font-semibold mb-4">Archived Teachers</h2>
-    <div class="overflow-hidden bg-white shadow sm:rounded-lg">
+    <h2 class="text-xl font-semibold text-gray-200 mb-4">Archived Teachers</h2>
+    <div class="bg-gray-900 shadow-xl rounded-lg border border-gray-700">
       <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
+        <table class="min-w-full divide-y divide-gray-700">
+          <thead>
             <tr>
-              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Username</th>
-              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Name</th>
-              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Phone</th>
-              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Specializations</th>
-              <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Actions</th>
+              <th class="px-6 py-3.5 text-left text-sm font-medium text-gray-200">Username</th>
+              <th class="px-6 py-3.5 text-left text-sm font-medium text-gray-200">Name</th>
+              <th class="px-6 py-3.5 text-left text-sm font-medium text-gray-200">Phone</th>
+              <th class="px-6 py-3.5 text-left text-sm font-medium text-gray-200">Specializations</th>
+              <th class="relative px-6 py-3.5">
+                <span class="sr-only">Actions</span>
+              </th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
+          <tbody class="divide-y divide-gray-700">
             <% @archived_teachers.each do |teacher| %>
-              <tr>
-                <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap"><%= teacher.username %></td>
-                <td class="px-6 py-4 text-sm text-gray-900"><%= "#{teacher.firstname} #{teacher.lastname}" %></td>
-                <td class="px-6 py-4 text-sm text-gray-900"><%= teacher.phone_number %></td>
-                <td class="px-6 py-4 text-sm text-gray-900">
+              <tr class="hover:bg-gray-800/50">
+                <td class="px-6 py-4 text-sm text-gray-300 whitespace-nowrap"><%= teacher.username %></td>
+                <td class="px-6 py-4 text-sm text-gray-300"><%= "#{teacher.firstname} #{teacher.lastname}" %></td>
+                <td class="px-6 py-4 text-sm text-gray-300"><%= teacher.phone_number %></td>
+                <td class="px-6 py-4 text-sm text-gray-300">
                   <%= teacher.specializations.map(&:name).join(", ") %>
                 </td>
-                <td class="flex px-6 py-4 space-x-2 text-sm font-medium whitespace-nowrap">
-                  <%= button_to "Unarchive", users_dean_unarchive_teacher_path(teacher), 
-                      method: :patch, 
-                      class: "text-green-600 hover:text-green-900 bg-transparent border-0 p-0 inline" %>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <%= button_to users_dean_unarchive_teacher_path(teacher), method: :patch, class: "text-emerald-400 hover:text-emerald-300 inline-flex items-center" do %>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                  <% end %>
                 </td>
               </tr>
             <% end %>
