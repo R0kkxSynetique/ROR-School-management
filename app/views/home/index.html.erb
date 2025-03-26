@@ -4,11 +4,11 @@
   <div class="w-full max-w-md p-6 bg-gray-800 rounded-lg shadow-xl">
     <% if user_signed_in? %>
       <div class="space-y-4">
-        <p class="text-lg text-gray-300 text-center">Welcome back! You are signed in as <span class="font-semibold text-blue-400"><%= current_user.email %></span></p>
+        <p class="text-lg text-center text-gray-300">Welcome back! You are signed in as <span class="font-semibold text-blue-400"><%= current_user.email %></span></p>
       </div>
     <% else %>
       <div class="space-y-4">
-        <p class="text-lg text-gray-300 text-center">Please sign in or create an account to get started.</p>
+        <p class="text-lg text-center text-gray-300">Please sign in to get started.</p>
       </div>
     <% end %>
   </div>
