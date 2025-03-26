@@ -1,12 +1,14 @@
-<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-  <div class="sm:flex sm:items-center">
-    <div class="sm:flex-auto">
-      <h1 class="text-2xl font-semibold text-gray-900">New Promotion Assessment</h1>
-      <p class="mt-2 text-sm text-gray-700">Create a new promotion assessment with conditions.</p>
-    </div>
-  </div>
+<% content_for :title, "New Promotion Assessment" %>
 
-  <div class="mt-8">
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-3xl mx-auto">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">
+        New Promotion Assessment
+      </h1>
+      <p class="mt-2 text-sm text-gray-400">Create a new promotion assessment with conditions</p>
+    </div>
+
     <%= render 'form', promotion_asserment: @promotion_asserment %>
   </div>
 </div>
