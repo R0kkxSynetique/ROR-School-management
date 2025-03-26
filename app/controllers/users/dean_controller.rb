@@ -7,7 +7,6 @@ class Users::DeanController < ApplicationController
   before_action :set_teacher, only: [ :edit_teacher, :update_teacher, :archive_teacher, :unarchive_teacher ]
 
   def dashboard
-    @recent_classes = SchoolClass.order(created_at: :desc).limit(5)
   end
 
   def school_classes_index
