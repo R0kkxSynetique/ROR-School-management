@@ -2,47 +2,63 @@
 
 <div class="container mx-auto px-4 py-8">
   <!-- Course Details -->
-  <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
-    <div class="px-4 py-5 sm:px-6 flex items-center justify-between">
+  <div class="bg-gray-900 bg-opacity-50 shadow-xl backdrop-blur-sm border border-gray-800 rounded-xl overflow-hidden mb-8">
+    <div class="px-6 py-5 border-b border-gray-700 flex items-center justify-between">
       <div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Course Details</h3>
+        <h1 class="text-3xl font-bold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">
+          <%= @course.name %>
+        </h1>
+        <p class="mt-2 text-sm text-gray-400">Course Details</p>
       </div>
       <% if current_user.person.is_a?(Dean) %>
         <div class="flex items-center space-x-4">
-          <%= link_to "Edit Course", users_dean_edit_course_path(@course), 
-              class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+          <%= link_to users_dean_edit_course_path(@course),
+              class: "inline-flex items-center px-4 py-2 border border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-300 bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500 transition duration-200" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+            Edit Course
+          <% end %>
           <% if @course.status == "active" %>
-            <%= button_to "Archive Course", users_dean_archive_course_path(@course), 
+            <%= button_to users_dean_archive_course_path(@course),
                 method: :patch,
-                class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500",
-                data: { confirm: "Are you sure you want to archive this course?" } %>
+                class: "inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-red-500 transition duration-200" do %>
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+              </svg>
+              Archive Course
+            <% end %>
           <% else %>
-            <%= button_to "Unarchive Course", users_dean_unarchive_course_path(@course), 
+            <%= button_to users_dean_unarchive_course_path(@course),
                 method: :patch,
-                class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500",
-                data: { confirm: "Are you sure you want to unarchive this course?" } %>
+                class: "inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-green-500 transition duration-200" do %>
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+              Unarchive Course
+            <% end %>
           <% end %>
         </div>
       <% end %>
     </div>
-    <div class="border-t border-gray-200">
+    <div class="border-t border-gray-700">
       <dl>
-        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Name</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @course.name %></dd>
+        <div class="px-6 py-5 bg-gray-800 bg-opacity-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-400">Name</dt>
+          <dd class="mt-1 text-sm text-gray-300 sm:mt-0 sm:col-span-2"><%= @course.name %></dd>
         </div>
-        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Description</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @course.description %></dd>
+        <div class="px-6 py-5 bg-gray-900 bg-opacity-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-400">Description</dt>
+          <dd class="mt-1 text-sm text-gray-300 sm:mt-0 sm:col-span-2"><%= @course.description %></dd>
         </div>
-        <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Room</dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @course.room.name %></dd>
+        <div class="px-6 py-5 bg-gray-800 bg-opacity-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-400">Room</dt>
+          <dd class="mt-1 text-sm text-gray-300 sm:mt-0 sm:col-span-2"><%= @course.room.name %></dd>
         </div>
-        <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">Status</dt>
+        <div class="px-6 py-5 bg-gray-900 bg-opacity-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-400">Status</dt>
           <dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">
-            <span class="<%= @course.status == 'active' ? 'text-green-600' : 'text-red-600' %>">
+            <span class="<%= @course.status == 'active' ? 'text-green-400' : 'text-red-400' %>">
               <%= @course.status.capitalize %>
             </span>
           </dd>
@@ -52,61 +68,115 @@
   </div>
 
   <!-- Specializations -->
-  <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
-    <div class="px-4 py-5 sm:px-6">
-      <h3 class="text-lg leading-6 font-medium text-gray-900">Specializations</h3>
+  <div class="bg-gray-900 bg-opacity-50 shadow-xl backdrop-blur-sm border border-gray-800 rounded-xl overflow-hidden mb-8">
+    <div class="px-6 py-5 border-b border-gray-700">
+      <div class="flex items-center">
+        <div class="h-8 w-8 rounded-full bg-purple-600 flex items-center justify-center mr-3">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-white">Specializations</h3>
+      </div>
     </div>
-    <div class="border-t border-gray-200">
+    <div class="border-t border-gray-700">
       <% if @course.specializations.any? %>
-        <ul class="divide-y divide-gray-200">
+        <ul class="divide-y divide-gray-700">
           <% @course.specializations.each do |specialization| %>
-            <li class="px-4 py-3">
-              <div class="text-sm text-gray-900"><%= specialization.name %></div>
-              <div class="text-sm text-gray-500"><%= specialization.description %></div>
+            <li class="px-6 py-4 hover:bg-gray-800 transition duration-150">
+              <div class="flex items-center">
+                <div class="h-8 w-8 rounded-full bg-purple-600 flex items-center justify-center mr-3">
+                  <span class="text-xs font-medium text-white"><%= specialization.name[0] %></span>
+                </div>
+                <div>
+                  <div class="text-sm text-gray-100"><%= specialization.name %></div>
+                  <div class="text-sm text-gray-400"><%= specialization.description %></div>
+                </div>
+              </div>
             </li>
           <% end %>
         </ul>
       <% else %>
-        <p class="px-4 py-3 text-sm text-gray-500">No specializations assigned to this course.</p>
+        <p class="px-6 py-4 text-sm text-gray-400">No specializations assigned to this course.</p>
       <% end %>
     </div>
   </div>
 
   <!-- Teachers -->
-  <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
-    <div class="px-4 py-5 sm:px-6">
-      <h3 class="text-lg leading-6 font-medium text-gray-900">Teachers</h3>
+  <div class="bg-gray-900 bg-opacity-50 shadow-xl backdrop-blur-sm border border-gray-800 rounded-xl overflow-hidden mb-8">
+    <div class="px-6 py-5 border-b border-gray-700">
+      <div class="flex items-center">
+        <div class="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center mr-3">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-white">Teachers</h3>
+      </div>
     </div>
-    <div class="border-t border-gray-200">
-      <ul class="divide-y divide-gray-200">
+    <div class="border-t border-gray-700">
+      <ul class="divide-y divide-gray-700">
         <% @teachers.each do |teacher| %>
-          <li class="px-4 py-3">
-            <div class="text-sm text-gray-900"><%= "#{teacher.firstname} #{teacher.lastname}" %></div>
-            <div class="text-sm text-gray-500"><%= teacher.username %></div>
+          <li class="px-6 py-4 hover:bg-gray-800 transition duration-150">
+            <div class="flex items-center">
+              <div class="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center mr-3">
+                <span class="text-xs font-medium text-white"><%= teacher.firstname[0] %></span>
+              </div>
+              <div>
+                <div class="text-sm text-gray-100"><%= "#{teacher.firstname} #{teacher.lastname}" %></div>
+                <div class="text-sm text-gray-400"><%= teacher.username %></div>
+              </div>
+            </div>
           </li>
+        <% end %>
+        <% if @teachers.empty? %>
+          <li class="px-6 py-4 text-sm text-gray-400 text-center">No teachers assigned to this course.</li>
         <% end %>
       </ul>
     </div>
   </div>
 
   <!-- Classes -->
-  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-    <div class="px-4 py-5 sm:px-6">
-      <h3 class="text-lg leading-6 font-medium text-gray-900">Classes Taking This Course</h3>
+  <div class="bg-gray-900 bg-opacity-50 shadow-xl backdrop-blur-sm border border-gray-800 rounded-xl overflow-hidden">
+    <div class="px-6 py-5 border-b border-gray-700">
+      <div class="flex items-center">
+        <div class="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center mr-3">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-white">Classes Taking This Course</h3>
+      </div>
     </div>
-    <div class="border-t border-gray-200">
-      <ul class="divide-y divide-gray-200">
+    <div class="border-t border-gray-700">
+      <ul class="divide-y divide-gray-700">
         <% @school_classes.each do |school_class| %>
-          <li class="px-4 py-3">
-            <div class="text-sm text-gray-900"><%= school_class.name %></div>
-            <div class="text-sm text-gray-500">Section: <%= school_class.section.name %></div>
+          <li class="px-6 py-4 hover:bg-gray-800 transition duration-150">
+            <div class="flex items-center">
+              <div class="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center mr-3">
+                <span class="text-xs font-medium text-white"><%= school_class.name[0] %></span>
+              </div>
+              <div>
+                <div class="text-sm text-gray-100"><%= school_class.name %></div>
+                <div class="text-sm text-gray-400">Section: <%= school_class.section.name %></div>
+              </div>
+            </div>
           </li>
+        <% end %>
+        <% if @school_classes.empty? %>
+          <li class="px-6 py-4 text-sm text-gray-400 text-center">No classes are taking this course.</li>
         <% end %>
       </ul>
     </div>
   </div>
 
   <div class="mt-6">
-    <%= link_to 'Back to Courses', courses_path, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700" %>
+    <%= link_to courses_path,
+        class: "inline-flex items-center px-4 py-2 border border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-300 bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500 transition duration-200" do %>
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+      </svg>
+      Back to Courses
+    <% end %>
   </div>
 </div>
