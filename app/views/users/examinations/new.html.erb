@@ -1,16 +1,12 @@
-<div class="container mx-auto px-4 py-8">
-  <div class="max-w-3xl mx-auto">
-    <div class="md:flex md:items-center md:justify-between mb-8">
-      <div class="flex-1 min-w-0">
-        <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">New Examination</h2>
-      </div>
-      <div class="mt-4 flex md:mt-0 md:ml-4">
-        <%= link_to 'Back to Examinations', users_examinations_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" %>
-      </div>
+<% content_for :title, "New Examination" %>
+
+<div class="container px-4 py-8 mx-auto">
+  <div class="max-w-2xl mx-auto">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">New Examination</h1>
+      <p class="mt-2 text-sm text-gray-400">Create a new examination record.</p>
     </div>
 
-    <div class="bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
-      <%= render 'form' %>
-    </div>
+    <%= render "form", examination: @examination %>
   </div>
 </div>
