@@ -16,10 +16,10 @@
     <div>
       <%= f.label :student_id, "Student", class: "block text-sm font-medium text-gray-300 mb-2" %>
       <div class="relative">
-        <%= f.collection_select :student_id,
-            @available_students, :id,
-            ->(s) { "#{s.firstname} #{s.lastname}" },
-            { prompt: "Select a student" },
+      <%= f.collection_select :student_id,
+          @available_students, :id,
+          ->(s) { "#{s.firstname} #{s.lastname}" },
+          { prompt: "Select a student" },
             class: "block w-full rounded-lg border border-gray-700 bg-gray-800 text-gray-100 p-3 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm placeholder-gray-500 appearance-none" %>
         <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
           <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
