@@ -7,6 +7,7 @@ class PromotionAsserment < ApplicationRecord
 
   validates :name, presence: true
   validates :effective_date, presence: true
+  validate :single_condition
 
   def evaluate_student(student)
     return false unless student.is_a?(Student)
@@ -27,5 +28,13 @@ class PromotionAsserment < ApplicationRecord
     end
 
     (weighted_sum / total_weight) >= 0.5
+  end
+
+  private
+
+  def single_condition
+    if promotion_conditions.reject(&:marked_for_destruction?).size > 1
+      errors.add(:base, "Only one condition is allowed per promotion assessment")
+    end
   end
 end

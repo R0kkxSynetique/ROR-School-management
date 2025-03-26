@@ -50,19 +50,13 @@
         </div>
 
         <div class="pt-8 border-t border-gray-200">
-          <h3 class="text-lg font-medium leading-6 text-gray-900">Promotion Conditions</h3>
-          <p class="mt-1 text-sm text-gray-500">Define the conditions that students must meet for promotion.</p>
+          <h3 class="text-lg font-medium leading-6 text-gray-900">Promotion Condition</h3>
+          <p class="mt-1 text-sm text-gray-500">Define the condition that students must meet for promotion.</p>
 
-          <div id="promotion-conditions" class="mt-6 space-y-6">
+          <div id="promotion-conditions" class="mt-6">
             <%= form.fields_for :promotion_conditions do |f| %>
               <%= render 'promotion_condition_fields', f: f %>
             <% end %>
-
-            <div class="mt-4">
-              <%= link_to_add_association 'Add Condition', form, :promotion_conditions, 
-                  class: "inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500",
-                  data: { association_insertion_method: 'append', association_insertion_node: '#promotion-conditions' } %>
-            </div>
           </div>
         </div>
 
