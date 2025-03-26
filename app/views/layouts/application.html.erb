@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full bg-gray-900">
   <head>
     <title><%= content_for(:title) || "School Management" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -26,89 +26,127 @@
     <style>
       .dropdown-menu {
         display: none;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: opacity 0.2s ease, transform 0.2s ease;
       }
       .dropdown-menu.show {
         display: block;
+        opacity: 1;
+        transform: translateY(0);
       }
-      
+
       /* DataTables Custom Styling */
       .dataTables_wrapper {
-        padding: 1rem;
-        background: #ffffff;
-        border-radius: 0.5rem;
-        color: #1f2937;
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 0.75rem;
+        color: #f3f4f6;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
       .dataTables_filter input, .dataTables_length select {
-        padding: 0.5rem;
-        border: 1px solid #e5e7eb;
-        border-radius: 0.375rem;
+        padding: 0.5rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.5rem;
         margin-left: 0.5rem;
-        color: #1f2937;
+        color: #f3f4f6;
+        background: rgba(255, 255, 255, 0.05);
+        transition: all 0.2s ease;
       }
       .dataTables_filter input:focus, .dataTables_length select:focus {
-        outline: 2px solid #6366f1;
-        outline-offset: 2px;
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
       }
       table.dataTable thead th {
-        background-color: #f9fafb;
-        padding: 1rem;
+        background-color: rgba(255, 255, 255, 0.05);
+        padding: 1rem 1.5rem;
         text-align: left;
-        color: #4b5563;
+        color: #e5e7eb;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
       table.dataTable tbody td {
-        padding: 1rem;
-        color: #1f2937;
+        padding: 1rem 1.5rem;
+        color: #f3f4f6;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       }
       table.dataTable tbody tr:hover {
-        background-color: #f3f4f6;
+        background-color: rgba(255, 255, 255, 0.05);
       }
       table.dataTable tbody tr.selected {
-        background-color: #f3f4f6;
+        background-color: rgba(99, 102, 241, 0.1);
       }
       .dataTables_info, .dataTables_paginate {
-        color: #1f2937 !important;
+        color: #e5e7eb !important;
+        margin-top: 1rem;
       }
       .paginate_button {
-        color: #1f2937 !important;
+        color: #e5e7eb !important;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        transition: all 0.2s ease;
+      }
+      .paginate_button:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
       }
       .paginate_button.current {
         background: #6366f1 !important;
         color: #ffffff !important;
-        border-color: #6366f1 !important;
+        border: none !important;
       }
       .dataTables_length label, .dataTables_filter label {
-        color: #1f2937;
+        color: #e5e7eb;
       }
-      
+
       table.dataTable tr.selected td.select-checkbox:after,
       table.dataTable tr.selected th.select-checkbox:after {
         content: "✓";
         margin-top: -11px;
         margin-left: -4px;
         text-align: center;
-        text-shadow: 1px 1px #B0BED9, -1px -1px #B0BED9, 1px -1px #B0BED9, -1px 1px #B0BED9;
+        color: #6366f1;
       }
-      
+
       table.dataTable td.select-checkbox:before,
       table.dataTable th.select-checkbox:before {
         content: " ";
         margin-top: -6px;
         margin-left: -6px;
-        border: 1px solid #000;
-        border-radius: 3px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 4px;
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 12px;
-        height: 12px;
+        width: 16px;
+        height: 16px;
         box-sizing: border-box;
-        background-color: white;
+        background-color: transparent;
+        transition: all 0.2s ease;
       }
-      
+
       table.dataTable td.select-checkbox,
       table.dataTable th.select-checkbox {
         position: relative;
         cursor: pointer;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3);
       }
     </style>
     <script>
@@ -117,58 +155,69 @@
         dropdowns.forEach(dropdown => {
           const button = dropdown.querySelector('button');
           const menu = dropdown.querySelector('.dropdown-menu');
-          
+
           if (event.target === button || button.contains(event.target)) {
-            // Toggle dropdown on button click
             menu.classList.toggle('show');
             event.stopPropagation();
           } else if (!menu.contains(event.target)) {
-            // Close dropdown when clicking outside
             menu.classList.remove('show');
           }
         });
       });
+
+      // Auto-hide notifications after 5 seconds
+      document.addEventListener('DOMContentLoaded', function() {
+        const notifications = document.querySelectorAll('.notification');
+        notifications.forEach(notification => {
+          setTimeout(() => {
+            notification.style.opacity = '0';
+            setTimeout(() => {
+              notification.remove();
+            }, 500);
+          }, 5000);
+        });
+      });
     </script>
   </head>
-  <body class="min-h-screen text-gray-100 bg-gray-900">
-    <nav class="bg-gray-800 shadow-lg">
+  <body class="h-full text-gray-100 bg-gray-900">
+    <nav class="fixed top-0 left-0 right-0 z-40 bg-gray-800 shadow-xl backdrop-blur-lg bg-opacity-80">
       <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <div class="flex">
             <div class="flex items-center flex-shrink-0">
-              <%= link_to root_path, class: "text-xl font-bold text-white" do %>
+              <%= link_to root_path, class: "text-xl font-bold text-white hover:text-indigo-400 transition duration-200" do %>
                 School Management
               <% end %>
             </div>
             <div class="hidden space-x-4 sm:ml-6 sm:flex sm:items-center">
               <% if user_signed_in? %>
                 <% if current_user.person.is_a?(Student) %>
-                  <%= link_to "My Grades", users_grades_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+                  <%= link_to "My Grades", users_grades_path, class: "text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition duration-200" %>
                 <% elsif current_user.person.is_a?(Employee) %>
                   <% if current_user.person.is_a?(Dean) %>
-                    <%= link_to "Dashboard", users_dean_dashboard_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+                    <%= link_to "Dashboard", users_dean_dashboard_path, class: "text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition duration-200" %>
                     <div class="relative dropdown">
-                      <button type="button" class="flex items-center px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:text-white">
+                      <button type="button" class="flex items-center px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:text-white hover:bg-gray-700 transition duration-200">
                         Manage
-                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 ml-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                       </button>
-                      <div class="absolute left-0 z-50 w-48 py-2 mt-1 bg-gray-800 rounded-md shadow-xl dropdown-menu">
-                        <%= link_to "Classes", users_dean_school_classes_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700" %>
-                        <%= link_to "Courses", courses_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700" %>
-                        <%= link_to "Periods", users_dean_periods_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700" %>
-                        <%= link_to "Promotion Assertments", promotion_asserments_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700" %>
-                        <%= link_to "Report Cards", users_dean_report_cards_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700" %>
-                        <%= link_to "Schedules", users_dean_schedules_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700" %>
-                        <%= link_to "Sections", users_dean_sections_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700" %>
-                        <%= link_to "Specializations", users_dean_specializations_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700" %>
-                        <%= link_to "Students", users_dean_students_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700" %>
-                        <%= link_to "Teachers", users_dean_teachers_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700" %>
+                      <div class="absolute left-0 z-50 w-56 py-2 mt-1 bg-gray-800 rounded-lg shadow-xl dropdown-menu border border-gray-700">
+                        <%= link_to "Classes", users_dean_school_classes_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition duration-200" %>
+                        <%= link_to "Courses", courses_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition duration-200" %>
+                        <%= link_to "Periods", users_dean_periods_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition duration-200" %>
+                        <%= link_to "Promotion Assertments", promotion_asserments_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition duration-200" %>
+                        <%= link_to "Report Cards", users_dean_report_cards_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition duration-200" %>
+                        <%= link_to "Schedules", users_dean_schedules_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition duration-200" %>
+                        <%= link_to "Sections", users_dean_sections_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition duration-200" %>
+                        <%= link_to "Specializations", users_dean_specializations_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition duration-200" %>
+                        <%= link_to "Students", users_dean_students_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition duration-200" %>
+                        <%= link_to "Teachers", users_dean_teachers_path, class: "block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 transition duration-200" %>
                       </div>
                     </div>
                   <% end %>
-                  <%= link_to "My Examinations", users_examinations_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+                  <%= link_to "My Examinations", users_examinations_path, class: "text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium transition duration-200" %>
                 <% end %>
               <% end %>
             </div>
@@ -176,15 +225,15 @@
           <div class="flex items-center">
             <% if user_signed_in? %>
               <div class="flex items-center space-x-4">
-                <span class="text-sm text-gray-300"><%= current_user.email %></span>
-                <%= button_to 'Sign out', destroy_user_session_path, 
-                    method: :delete, 
-                    class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium" %>
+                <span class="text-sm text-gray-300 font-medium"><%= current_user.email %></span>
+                <%= button_to 'Sign out', destroy_user_session_path,
+                    method: :delete,
+                    class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-200 transform hover:scale-105" %>
               </div>
             <% else %>
               <div class="flex items-center space-x-4">
-                <%= link_to 'Sign in', new_user_session_path, 
-                    class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+                <%= link_to 'Sign in', new_user_session_path,
+                    class: "bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-200 transform hover:scale-105" %>
               </div>
             <% end %>
           </div>
@@ -194,17 +243,17 @@
 
     <div class="fixed top-0 left-0 right-0 z-50 mt-16">
       <% if notice %>
-        <div class="p-4 mx-4 mt-4 text-sm text-green-400 transition-all duration-500 bg-green-900 rounded-lg shadow-lg">
+        <div class="p-4 mx-4 mt-4 text-sm text-green-400 bg-green-900 bg-opacity-75 rounded-lg shadow-lg notification transition-all duration-500 backdrop-blur-sm border border-green-700">
           <%= notice %>
         </div>
       <% end %>
       <% if alert %>
-        <div class="p-4 mx-4 mt-4 text-sm text-red-400 transition-all duration-500 bg-red-900 rounded-lg shadow-lg">
+        <div class="p-4 mx-4 mt-4 text-sm text-red-400 bg-red-900 bg-opacity-75 rounded-lg shadow-lg notification transition-all duration-500 backdrop-blur-sm border border-red-700">
           <%= alert %>
         </div>
       <% end %>
     </div>
-    <main class="container px-4 py-8 mx-auto mt-16 sm:px-6 lg:px-8">
+    <main class="container px-4 py-8 mx-auto mt-20 sm:px-6 lg:px-8">
       <%= yield %>
     </main>
   </body>
