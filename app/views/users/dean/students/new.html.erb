@@ -1,13 +1,12 @@
 <% content_for :title, "New Student" %>
 
 <div class="container px-4 py-8 mx-auto">
-  <div class="max-w-2xl mx-auto">
-    <h1 class="mb-6 text-2xl font-bold">Add New Student</h1>
-
-    <div class="px-4 py-5 bg-white shadow sm:rounded-lg sm:p-6">
-      <%= form_with(model: [:users, :dean, @student], class: "space-y-6") do |f| %>
-        <%= render partial: "form", locals: { f: f } %>
-      <% end %>
-    </div>
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">New Student</h1>
+    <p class="mt-2 text-sm text-gray-400">Create a new student record with their personal and contact information.</p>
   </div>
+
+  <%= form_with(model: [:users, :dean, @student], local: true) do |f| %>
+    <%= render 'form', f: f %>
+  <% end %>
 </div>
