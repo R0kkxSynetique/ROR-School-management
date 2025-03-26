@@ -1,15 +1,15 @@
 class Users::Dean::SpecializationsController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_dean!
-  before_action :set_specialization, only: [ :edit, :update, :archive, :unarchive ]
+  before_action :set_specialization, only: [ :edit, :update, :destroy ]
 
   def index
-    @active_specializations = Specialization.where(archived: false)
-    @archived_specializations = Specialization.where(archived: true)
+    @specializations = Specialization.includes(:people).all
   end
 
   def new
     @specialization = Specialization.new
+    @teachers = Employee.where(type: "Employee", status: "active")
   end
 
   def create
@@ -18,29 +18,27 @@ class Users::Dean::SpecializationsController < ApplicationController
     if @specialization.save
       redirect_to users_dean_specializations_path, notice: "Specialization was successfully created."
     else
+      @teachers = Employee.where(type: "Employee", status: "active")
       render :new, status: :unprocessable_entity
     end
   end
 
   def edit
+    @teachers = Employee.where(type: "Employee", status: "active")
   end
 
   def update
     if @specialization.update(specialization_params)
       redirect_to users_dean_specializations_path, notice: "Specialization was successfully updated."
     else
+      @teachers = Employee.where(type: "Employee", status: "active")
       render :edit, status: :unprocessable_entity
     end
   end
 
-  def archive
-    @specialization.update(archived: true)
-    redirect_to users_dean_specializations_path, notice: "Specialization was successfully archived."
-  end
-
-  def unarchive
-    @specialization.update(archived: false)
-    redirect_to users_dean_specializations_path, notice: "Specialization was successfully unarchived."
+  def destroy
+    @specialization.destroy
+    redirect_to users_dean_specializations_path, notice: "Specialization was successfully deleted."
   end
 
   private
@@ -50,7 +48,7 @@ class Users::Dean::SpecializationsController < ApplicationController
   end
 
   def specialization_params
-    params.require(:specialization).permit(:name, :description)
+    params.require(:specialization).permit(:name, :description, person_ids: [])
   end
 
   def ensure_dean!
