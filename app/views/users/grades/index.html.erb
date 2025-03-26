@@ -39,11 +39,9 @@
                 <div class="text-sm text-gray-100"><%= grade.examination.title %></div>
             </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <% grade_color = case grade.value
-                   when 90..100 then "bg-green-900 text-green-200"
-                   when 80..89 then "bg-blue-900 text-blue-200"
-                   when 70..79 then "bg-yellow-900 text-yellow-200"
-                   else "bg-red-900 text-red-200"
+                <% grade_color = case
+                   when grade.value >= 4.0 then 'bg-green-900 text-green-200'
+                   else 'bg-red-900 text-red-200'
                    end %>
                 <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full <%= grade_color %>">
               <%= grade.value %>
