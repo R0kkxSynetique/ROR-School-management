@@ -43,11 +43,11 @@ puts "Creating standalone data..."
 # Create addresses
 addresses = 5.times.map do |i|
   Address.create!(
-    street: "#{rand(100..999)} #{[ 'Main St', 'Oak Ave', 'Maple Rd', 'Cedar Ln', 'Pine St' ].sample}",
-    locality: [ "Downtown", "Uptown", "Midtown", "West End", "East Side" ].sample,
-    postal_code: rand(10000..99999).to_s,
-    administrative_area: [ "State A", "State B", "State C" ].sample,
-    country: [ "Country A", "Country B" ].sample
+    street: Faker::Address.street_address,
+    locality: Faker::Address.city,
+    postal_code: Faker::Address.zip_code,
+    administrative_area: Faker::Address.state,
+    country: Faker::Address.country
   )
 end
 
@@ -60,32 +60,32 @@ end
 
 # Create sections
 sections = [
-  { name: "IT", description: "Information technology and software development" },
-  { name: "Media", description: "Digital media and graphic design" },
-  { name: "Polymechanic", description: "Mechanical engineering and robotics" },
-  { name: "Business", description: "Business administration and management" }
+  { name: "IT", description: Faker::Lorem.paragraph(sentence_count: 2) },
+  { name: "Media", description: Faker::Lorem.paragraph(sentence_count: 2) },
+  { name: "Polymechanic", description: Faker::Lorem.paragraph(sentence_count: 2) },
+  { name: "Business", description: Faker::Lorem.paragraph(sentence_count: 2) }
 ].map { |section| Section.create!(section) }
 
 # Create specializations
 specializations = [
-  { name: "Web development", description: "Web application development and design" },
-  { name: "Internet of Things", description: "IoT and embedded systems" },
-  { name: "Cyber security", description: "Network security and ethical hacking" },
-  { name: "Graphic design", description: "Digital media and graphic design" },
-  { name: "Mechanical engineering", description: "Mechanical engineering and robotics" },
-  { name: "Digital Marketing", description: "Online marketing and social media" }
+  { name: "Web development", description: Faker::Lorem.paragraph(sentence_count: 2) },
+  { name: "Internet of Things", description: Faker::Lorem.paragraph(sentence_count: 2) },
+  { name: "Cyber security", description: Faker::Lorem.paragraph(sentence_count: 2) },
+  { name: "Graphic design", description: Faker::Lorem.paragraph(sentence_count: 2) },
+  { name: "Mechanical engineering", description: Faker::Lorem.paragraph(sentence_count: 2) },
+  { name: "Digital Marketing", description: Faker::Lorem.paragraph(sentence_count: 2) }
 ].map { |spec| Specialization.create!(spec) }
 
 # Create courses with rooms assigned
 courses = [
-  { name: "MAW2.1", description: "Software architecture exploration" },
-  { name: "ROR1", description: "Ruby on rails introduction" },
-  { name: "PRW3", description: "Advanced use of web frontend framework" },
-  { name: "FRA", description: "French classes" },
-  { name: "MKG", description: "Marketing analysis" },
-  { name: "MNY", description: "Machinery" },
-  { name: "DBS1", description: "Database Systems" },
-  { name: "NET1", description: "Network Fundamentals" }
+  { name: "MAW2.1", description: Faker::Lorem.paragraph(sentence_count: 2) },
+  { name: "ROR1", description: Faker::Lorem.paragraph(sentence_count: 2) },
+  { name: "PRW3", description: Faker::Lorem.paragraph(sentence_count: 2) },
+  { name: "FRA", description: Faker::Lorem.paragraph(sentence_count: 2) },
+  { name: "MKG", description: Faker::Lorem.paragraph(sentence_count: 2) },
+  { name: "MNY", description: Faker::Lorem.paragraph(sentence_count: 2) },
+  { name: "DBS1", description: Faker::Lorem.paragraph(sentence_count: 2) },
+  { name: "NET1", description: Faker::Lorem.paragraph(sentence_count: 2) }
 ].map { |course| Course.create!(course.merge(status: "active", room: rooms.sample)) }
 
 # Create school classes
@@ -104,11 +104,11 @@ admin_person = Person.create!(
   username: "admin",
   lastname: "Admin",
   firstname: "System",
-  phone_number: "078 123 45 67",
+  phone_number: "+41 #{rand(70..79)} #{rand(100..999)} #{rand(10..99)} #{rand(10..99)}",
   status: "active",
   type: "Employee",
   address: addresses.first,
-  iban: "DE89370400440532013000"
+  iban: Faker::Bank.iban(country_code: 'de')
 )
 
 admin_user = User.create!(
@@ -124,11 +124,11 @@ deans = 2.times.map do |i|
     username: "dean#{i}",
     lastname: Faker::Name.last_name,
     firstname: Faker::Name.first_name,
-    phone_number: "+41 #{format('%02d', 76 + i)} #{format('%03d', rand(100..999))} #{format('%02d', rand(10..99))} #{format('%02d', rand(10..99))}",
+    phone_number: "+41 #{rand(70..79)} #{rand(100..999)} #{rand(10..99)} #{rand(10..99)}",
     status: "active",
     type: "Dean",
     address: addresses.sample,
-    iban: "DE89370400440532099#{format('%03d', i+1)}"
+    iban: Faker::Bank.iban(country_code: 'de')
   )
 
   user = User.create!(
@@ -146,11 +146,11 @@ teachers = 8.times.map do |i|
     username: "teacher#{i}",
     lastname: Faker::Name.last_name,
     firstname: Faker::Name.first_name,
-    phone_number: "0"+format('%02d', 77 + (i % 3)) + " " + format('%03d', rand(100..999)) + " " + format('%02d', rand(10..99)) + " " + format('%02d', rand(10..99)),
+    phone_number: "+41 #{rand(70..79)} #{rand(100..999)} #{rand(10..99)} #{rand(10..99)}",
     status: "active",
     type: "Employee",
     address: addresses.sample,
-    iban: "DE89370400440532013#{format('%03d', i+1)}"
+    iban: Faker::Bank.iban(country_code: 'de')
   )
 
   user = User.create!(
@@ -168,7 +168,7 @@ students = 20.times.map do |i|
     username: "student#{i}",
     lastname: Faker::Name.last_name,
     firstname: Faker::Name.first_name,
-    phone_number: format('%02d', 76 + (i % 4)) + " " + format('%03d', rand(100..999)) + " " + format('%02d', rand(10..99)) + " " + format('%02d', rand(10..99)),
+    phone_number: "+41 #{rand(70..79)} #{rand(100..999)} #{rand(10..99)} #{rand(10..99)}",
     status: "active",
     type: "Student",
     address: addresses.sample
@@ -190,7 +190,7 @@ school_classes.each do |school_class|
   school_class.courses << courses.sample(rand(3..5))
 end
 
-# Assign teachers to courses (each teacher teaches 2-4 courses) - Moved this up
+# Assign teachers to courses (each teacher teaches 2-4 courses)
 teachers.each do |teacher|
   teacher.courses << courses.sample(rand(2..4))
 end
@@ -220,8 +220,8 @@ courses.each do |course|
     # Create periods for different school classes
     school_classes.sample(rand(1..3)).each do |school_class|
       Period.create!(
-        start_date: Date.today,
-        end_date: [ 3, 4, 6 ].sample.months.from_now,
+        start_date: Faker::Date.between(from: Date.today, to: 1.month.from_now),
+        end_date: Faker::Date.between(from: 2.months.from_now, to: 6.months.from_now),
         schedule_id: schedule.id,
         school_class_id: school_class.id
       )
@@ -239,8 +239,8 @@ courses.each do |course|
   course.people.where(type: 'Employee').each do |teacher|
     2.times do
       exam = Examination.create!(
-        title: "#{course.name} #{[ 'Midterm', 'Final', 'Quiz', 'Project' ].sample}",
-        expected_date: rand(1..4).months.from_now,
+        title: "#{course.name} #{Faker::Educator.course_name}",
+        expected_date: Faker::Date.between(from: 1.month.from_now, to: 4.months.from_now),
         person: teacher,
         course: course
       )
@@ -248,11 +248,11 @@ courses.each do |course|
       # Create grades for students in the course's school classes
       course.school_classes.flat_map(&:students).uniq.each do |student|
         Grade.create!(
-          value: (rand(30..60) / 10.0).round(1), # Generates values between 3.0 and 6.0 with 0.1 precision
-          effective_date: Date.today,
+          value: Faker::Number.between(from: 3.0, to: 6.0).round(1),
+          effective_date: Faker::Date.backward(days: 30),
           examination: exam,
           student: student,
-          teachers: [ teacher ]  # Include the teacher directly in the creation
+          teachers: [ teacher ]
         )
       end
     end
@@ -266,8 +266,8 @@ sections.each do |section|
   rand(2..3).times do |i|
     promotion = PromotionAsserment.create!(
       name: "#{section.name} Promotion #{Date.today.year} - Set #{i + 1}",
-      description: "Promotion requirements for #{section.name} students",
-      effective_date: Date.today,
+      description: Faker::Lorem.paragraph(sentence_count: 3),
+      effective_date: Faker::Date.between(from: Date.today, to: 1.month.from_now),
       active: true,
       dean: deans.sample
     )
@@ -279,8 +279,8 @@ sections.each do |section|
     PromotionCondition.create!(
       promotion_asserment: promotion,
       condition_type: 'overall_average',
-      minimum_grade: 4.0,
-      weight: 1.0,
+      minimum_grade: Faker::Number.between(from: 3.5, to: 4.5).round(1),
+      weight: Faker::Number.between(from: 0.8, to: 1.0).round(1),
       required: true
     )
 
@@ -290,8 +290,8 @@ sections.each do |section|
       PromotionCondition.create!(
         promotion_asserment: promotion,
         condition_type: 'single_course',
-        minimum_grade: 3.5,
-        weight: 0.7,
+        minimum_grade: Faker::Number.between(from: 3.0, to: 4.0).round(1),
+        weight: Faker::Number.between(from: 0.6, to: 0.8).round(1),
         required: true,
         courses: [ course ]
       )
@@ -301,8 +301,8 @@ sections.each do |section|
     PromotionCondition.create!(
       promotion_asserment: promotion,
       condition_type: 'multiple_courses',
-      minimum_grade: 4.0,
-      weight: 0.5,
+      minimum_grade: Faker::Number.between(from: 3.5, to: 4.5).round(1),
+      weight: Faker::Number.between(from: 0.4, to: 0.6).round(1),
       required: false,
       courses: section_courses.sample(3)
     )
