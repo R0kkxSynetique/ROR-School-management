@@ -1,7 +1,25 @@
 ```mermaid
 
 classDiagram
-    class addresses {
+    class User {
+        email$
+        encrypted_password$
+    }
+    class people {
+        username$
+        lastname
+        firstname
+        phone_number
+        status
+        type
+    }
+    class students { }
+    class employees {
+        iban$
+        type
+    }
+    class dean { }
+    class address {
         address$
         locality$
         postal_code$
@@ -24,20 +42,6 @@ classDiagram
     class periods {
         start_date$
         end_date$
-    }
-    class people {
-        username$
-        lastname
-        firstname
-        email
-        phone_number
-        status
-        type
-    }
-    class students { }
-    class employees {
-        iban$
-        type
     }
     class specializations {
         name$
@@ -64,25 +68,34 @@ classDiagram
         name$
     }
 
+    User "1,1" -- "0,1" people: has
+    address "1,1" -- "1,n" people: has
     people <|-- students
     people <|-- employees
+    employees <|-- dean
 
-    employees "0,n" -- "0,n" courses: to teach
-    classes "0,n" -- "0,n" courses: to follow
-    addresses "1,n" -- "1,1" people: to live
-    employees "0,n" -- "1,1" examinations: to plan
-    courses "0,n" -- "1,1" examinations: to have
-    courses "0,n" -- "0,n" specializations: to have
-    employees "0,n" -- "0,n" specializations: to have
-    employees "0,n" -- "1,n" grades: to give
-    examinations "0,n" -- "1,1" grades: to have
-    students "0,n" -- "1,1" grades: to have
-    employees "0,n" -- "0,n" classes: to master
-    students "0,n" -- "0,n" classes: to contain
-    schedules "0,n" -- "1,1" periods: to last
-    classes "0,n" -- "1,1" periods: to last
-    courses "0,n" -- "1,1" schedules: to last
-    classes "1,1" -- "0,n" sections: to categorize
-    sections "1,n" -- "0,n" promotion_asserments: to have
-    courses "1,1" -- "0,n" rooms: to be in
+    employees "0,n" -- "0,n" courses: teaches
+    classes "0,n" -- "0,n" courses: follows
+    courses "1,1" -- "0,n" rooms: isIn
+    employees "0,n" -- "1,1" examinations: plans
+    courses "0,n" -- "1,1" examinations: has
+    examinations "0,n" -- "1,1" grades: generates
+    employees "0,n" -- "1,n" grades: gives
+    students "0,n" -- "1,1" grades: receives
+    
+    employees "0,n" -- "0,n" specializations: hasExpertise
+    courses "0,n" -- "0,n" specializations: requires
+    
+    employees "0,n" -- "0,n" classes: masterizes
+    students "0,n" -- "0,n" classes: enrolledIn
+    
+    classes "0,n" -- "1,1" sections: belongsTo
+    classes "0,n" -- "1,1" periods: runsIn
+    
+    courses "1,1" -- "0,n" schedules: hasSchedule
+    schedules "0,n" -- "1,1" periods: during
+    
+    sections "1,n" -- "0,n" promotion_asserments: evaluates
+
+    dean "1,1" -- "0,n" promotion_asserments: manages
 ```
