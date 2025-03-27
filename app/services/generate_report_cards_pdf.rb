@@ -67,6 +67,54 @@ class GenerateReportCardsPdf
         end
       end
     end
+    @pdf.move_down 20
+
+    # Classes Section
+    @pdf.font_size(16) do
+      @pdf.text "Current Classes", style: :bold
+      @pdf.stroke_color "333333"
+      @pdf.line_width 1
+      @pdf.stroke_horizontal_rule
+    end
+    @pdf.move_down 15
+
+    # Get active classes for the student
+    active_classes = student.school_classes.active.includes(:section, :courses, :teachers)
+
+    if active_classes.any?
+      classes_data = [["Course", "Section", "Teacher"]]
+
+      active_classes.each do |school_class|
+        # Join course names with commas if there are multiple courses
+        course_names = school_class.courses.map(&:name).join(", ")
+        # Join teacher names with commas if there are multiple teachers
+        teacher_names = school_class.teachers.map(&:full_name).join(", ")
+        classes_data << [
+          course_names,
+          school_class.section.name,
+          teacher_names.present? ? teacher_names : "Not Assigned"
+        ]
+      end
+
+      @pdf.table(classes_data, header: true, width: @pdf.bounds.width) do |t|
+        t.header = true
+        t.row(0).style(background_color: "333333", text_color: "FFFFFF", font_style: :bold)
+        t.columns(0..2).align = :left
+        t.column_widths = {
+          0 => @pdf.bounds.width * 0.4,
+          1 => @pdf.bounds.width * 0.3,
+          2 => @pdf.bounds.width * 0.3
+        }
+        t.row(0).padding = 8
+        t.cells.padding = 5
+        t.cells.borders = [:bottom]
+        t.row(0).borders = [:bottom]
+      end
+    else
+      @pdf.font_size(12) do
+        @pdf.text "No active classes found for this student.", style: :italic
+      end
+    end
     @pdf.move_down 30
 
     # Grades Section
@@ -113,20 +161,81 @@ class GenerateReportCardsPdf
 
     # Averages Section
     @pdf.move_down 20
-    @pdf.font_size(14) do
+    @pdf.font_size(16) do
       @pdf.text "Course Averages", style: :bold
-      @pdf.move_down 10
+      @pdf.stroke_color "333333"
+      @pdf.line_width 1
+      @pdf.stroke_horizontal_rule
+    end
+    @pdf.move_down 15
 
-      grades_by_course.each do |course, grades|
-        average = (grades.sum(&:value) / grades.count).round(2)
-        @pdf.text "#{course.name}: #{average}", style: :italic
+    # Create averages data table
+    averages_data = [["Course", "Average", "Examinations"]]
+    grades_by_course.each do |course, grades|
+      # Calculate average only if there are grades
+      if grades.any?
+        # Convert values to float and calculate average
+        values = grades.map { |grade| grade.value.to_f }
+        average = (values.sum / values.size).round(2)
+      else
+        average = "N/A"
       end
 
-      overall_average = (grades_by_course.values.flatten.sum(&:value) /
-                        grades_by_course.values.flatten.count).round(2)
-      @pdf.move_down 10
-      @pdf.text "Overall Average: #{overall_average}", style: :bold_italic
+      averages_data << [
+        course.name,
+        average.to_s,
+        grades.count.to_s
+      ]
     end
+
+    # Add overall average row
+    total_grades = grades_by_course.values.flatten
+    if total_grades.any?
+      # Convert all values to float and calculate overall average
+      all_values = total_grades.map { |grade| grade.value.to_f }
+      overall_average = (all_values.sum / all_values.size).round(2)
+      total_examinations = total_grades.count
+    else
+      overall_average = "N/A"
+      total_examinations = 0
+    end
+
+    averages_data << [
+      "Overall Average",
+      overall_average.to_s,
+      total_examinations.to_s
+    ]
+
+    @pdf.table(averages_data, header: true, width: @pdf.bounds.width) do |t|
+      t.header = true
+      t.row(0).style(background_color: "333333", text_color: "FFFFFF", font_style: :bold)
+      t.columns(0..2).align = :left
+      t.column_widths = {
+        0 => @pdf.bounds.width * 0.5,
+        1 => @pdf.bounds.width * 0.25,
+        2 => @pdf.bounds.width * 0.25
+      }
+      t.row(0).padding = 8
+      t.cells.padding = 5
+      t.cells.borders = [:bottom]
+      t.row(0).borders = [:bottom]
+
+      # Style the last row (overall average) differently
+      t.row(-1).style(background_color: "F5F5F5", font_style: :bold)
+      t.row(-1).borders = [:top, :bottom]
+      t.row(-1).border_width = 2
+      t.row(-1).border_color = "333333"
+    end
+
+    # Add performance summary
+    @pdf.move_down 15
+    @pdf.font_size(12) do
+      @pdf.text "Performance Summary:", style: :bold
+      @pdf.move_down 5
+      @pdf.text "• Total Courses: #{grades_by_course.size}", style: :italic
+      @pdf.text "• Total Examinations: #{total_examinations}", style: :italic
+    end
+    @pdf.move_down 20
 
     # Promotion Conditions Section
     @pdf.move_down 30
