@@ -72,7 +72,7 @@ foreman start -f Procfile.dev
 
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under no license.
 
 [Ruby-shield]: https://img.shields.io/badge/Ruby-CC342D?style=for-the-badge&logo=ruby&logoColor=white
 [Ruby-url]: https://www.ruby-lang.org/en/
