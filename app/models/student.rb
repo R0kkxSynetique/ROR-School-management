@@ -14,6 +14,14 @@ class Student < Person
 
   before_validation :set_default_status
 
+  def archive!
+    update(status: "archived")
+  end
+
+  def unarchive!
+    update(status: "active")
+  end
+
   private
 
   def set_default_status

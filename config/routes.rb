@@ -39,6 +39,7 @@ Rails.application.routes.draw do
       resources :students do
         member do
           patch :archive
+          patch :unarchive
         end
       end
     end
