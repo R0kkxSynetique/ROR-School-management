@@ -50,6 +50,16 @@
           <dt class="text-sm font-medium text-gray-400">Section</dt>
           <dd class="mt-1 text-sm text-gray-300 sm:mt-0 sm:col-span-2"><%= @school_class.section.name %></dd>
         </div>
+        <div class="px-6 py-5 bg-gray-800 bg-opacity-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-400">Master Teacher</dt>
+          <dd class="mt-1 text-sm text-gray-300 sm:mt-0 sm:col-span-2">
+            <% if @school_class.master_teacher %>
+              <%= "#{@school_class.master_teacher.firstname} #{@school_class.master_teacher.lastname}" %>
+            <% else %>
+              <span class="text-gray-500">Not assigned</span>
+            <% end %>
+          </dd>
+        </div>
         <% if @school_class.archived? %>
           <div class="px-6 py-5 bg-gray-800 bg-opacity-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt class="text-sm font-medium text-gray-400">Status</dt>

@@ -10,12 +10,13 @@ class Users::DeanController < ApplicationController
   end
 
   def school_classes_index
-    @active_classes = SchoolClass.includes(:section).where(archived: false)
-    @archived_classes = SchoolClass.includes(:section).where(archived: true)
+    @active_classes = SchoolClass.includes(:section, :master_teacher).where(archived: false)
+    @archived_classes = SchoolClass.includes(:section, :master_teacher).where(archived: true)
   end
 
   def new_class
     @school_class = SchoolClass.new
+    @teachers = Employee.where(type: "Employee", status: "active")
   end
 
   def create_class
@@ -23,17 +24,20 @@ class Users::DeanController < ApplicationController
     if @school_class.persisted?
       redirect_to school_class_path(@school_class), notice: "Class was successfully created."
     else
+      @teachers = Employee.where(type: "Employee", status: "active")
       render :new_class, status: :unprocessable_entity
     end
   end
 
   def edit_class
+    @teachers = Employee.where(type: "Employee", status: "active")
   end
 
   def update_class
     if @school_class.update(school_class_params)
       redirect_to school_class_path(@school_class), notice: "Class was successfully updated."
     else
+      @teachers = Employee.where(type: "Employee", status: "active")
       render :edit_class, status: :unprocessable_entity
     end
   end
@@ -275,7 +279,7 @@ class Users::DeanController < ApplicationController
   end
 
   def school_class_params
-    params.require(:school_class).permit(:name, :uid, :section_id)
+    params.require(:school_class).permit(:name, :uid, :section_id, :master_teacher_id)
   end
 
   def teacher_params

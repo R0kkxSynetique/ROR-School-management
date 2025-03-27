@@ -71,7 +71,7 @@ class GenerateReportCardsPdf
 
     # Classes Section
     @pdf.font_size(16) do
-      @pdf.text "Current Classes", style: :bold
+      @pdf.text "School Classes", style: :bold
       @pdf.stroke_color "333333"
       @pdf.line_width 1
       @pdf.stroke_horizontal_rule
@@ -79,20 +79,20 @@ class GenerateReportCardsPdf
     @pdf.move_down 15
 
     # Get active classes for the student
-    active_classes = student.school_classes.active.includes(:section, :courses, :teachers)
+    active_classes = student.school_classes.active.includes(:section, :master_teacher)
 
     if active_classes.any?
-      classes_data = [["Course", "Section", "Teacher"]]
+      classes_data = [["Class", "Section", "Master Teacher"]]
 
       active_classes.each do |school_class|
-        # Join course names with commas if there are multiple courses
-        course_names = school_class.courses.map(&:name).join(", ")
-        # Join teacher names with commas if there are multiple teachers
-        teacher_names = school_class.teachers.map(&:full_name).join(", ")
+        master_teacher_name = school_class.master_teacher ?
+          "#{school_class.master_teacher.firstname} #{school_class.master_teacher.lastname}" :
+          "Not Assigned"
+
         classes_data << [
-          course_names,
+          school_class.name,
           school_class.section.name,
-          teacher_names.present? ? teacher_names : "Not Assigned"
+          master_teacher_name
         ]
       end
 
