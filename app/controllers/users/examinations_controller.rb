@@ -13,6 +13,7 @@ class Users::ExaminationsController < ApplicationController
 
   def new
     @examination = Examination.new
+    @available_courses = current_user.person.courses.active
   end
 
   def create
@@ -22,17 +23,20 @@ class Users::ExaminationsController < ApplicationController
     if @examination.save
       redirect_to users_examination_path(@examination), notice: "Examination was successfully created."
     else
+      @available_courses = current_user.person.courses.active
       render :new, status: :unprocessable_entity
     end
   end
 
   def edit
+    @available_courses = current_user.person.courses.active
   end
 
   def update
     if @examination.update(examination_params)
       redirect_to users_examination_path(@examination), notice: "Examination was successfully updated."
     else
+      @available_courses = current_user.person.courses.active
       render :edit, status: :unprocessable_entity
     end
   end
