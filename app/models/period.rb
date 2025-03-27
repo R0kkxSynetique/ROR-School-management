@@ -1,7 +1,4 @@
 class Period < ApplicationRecord
-  belongs_to :schedule
-  belongs_to :school_class
-
   validates :start_date, presence: true
   validates :end_date, presence: true
   validate :end_date_after_start_date

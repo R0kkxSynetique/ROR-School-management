@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_21_000001) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_27_141303) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "locality"
@@ -127,10 +127,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_000001) do
     t.date "end_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "schedule_id", null: false
-    t.integer "school_class_id", null: false
-    t.index ["schedule_id"], name: "index_periods_on_schedule_id"
-    t.index ["school_class_id"], name: "index_periods_on_school_class_id"
   end
 
   create_table "promotion_asserments", force: :cascade do |t|
@@ -244,8 +240,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_000001) do
   add_foreign_key "grades", "people", column: "student_id"
   add_foreign_key "people", "addresses"
   add_foreign_key "people", "users"
-  add_foreign_key "periods", "schedules"
-  add_foreign_key "periods", "school_classes"
   add_foreign_key "promotion_asserments", "people", column: "dean_id"
   add_foreign_key "promotion_conditions", "promotion_asserments"
   add_foreign_key "schedules", "courses", column: "courses_id"

@@ -4,7 +4,7 @@ class Users::Dean::PeriodsController < ApplicationController
   before_action :set_period, only: [ :show, :edit, :update, :destroy ]
 
   def index
-    @periods = Period.includes(:schedule, :school_class).all
+    @periods = Period.all
   end
 
   def show
@@ -12,8 +12,6 @@ class Users::Dean::PeriodsController < ApplicationController
 
   def new
     @period = Period.new
-    @schedules = Schedule.includes(:course).all
-    @school_classes = SchoolClass.all
   end
 
   def create
@@ -22,23 +20,17 @@ class Users::Dean::PeriodsController < ApplicationController
     if @period.save
       redirect_to users_dean_periods_path, notice: "Period was successfully created."
     else
-      @schedules = Schedule.includes(:course).all
-      @school_classes = SchoolClass.all
       render :new, status: :unprocessable_entity
     end
   end
 
   def edit
-    @schedules = Schedule.includes(:course).all
-    @school_classes = SchoolClass.all
   end
 
   def update
     if @period.update(period_params)
       redirect_to users_dean_periods_path, notice: "Period was successfully updated."
     else
-      @schedules = Schedule.includes(:course).all
-      @school_classes = SchoolClass.all
       render :edit, status: :unprocessable_entity
     end
   end
@@ -55,7 +47,7 @@ class Users::Dean::PeriodsController < ApplicationController
   end
 
   def period_params
-    params.require(:period).permit(:start_date, :end_date, :schedule_id, :school_class_id)
+    params.require(:period).permit(:start_date, :end_date)
   end
 
   def ensure_dean!
