@@ -1,76 +1,77 @@
 <%= form_with(model: [:users, :dean, @schedule], class: "space-y-6") do |f| %>
   <% if @schedule.errors.any? %>
-    <div class="p-4 rounded-lg bg-red-900 bg-opacity-50 border border-red-700">
-      <div class="flex">
-        <div class="flex-shrink-0">
-          <svg class="w-5 h-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-          </svg>
-        </div>
-        <div class="ml-3">
-          <h3 class="text-sm font-medium text-red-200">There was a problem with your submission</h3>
-          <div class="mt-2 text-sm text-red-200">
-            <ul class="pl-5 space-y-1 list-disc">
-              <% @schedule.errors.full_messages.each do |msg| %>
-                <li><%= msg %></li>
-              <% end %>
-            </ul>
-          </div>
-        </div>
-      </div>
+    <div class="bg-red-900 bg-opacity-50 border border-red-700 rounded-lg p-4">
+      <h2 class="text-red-400 text-sm font-medium mb-2">
+        <%= pluralize(@schedule.errors.count, "error") %> prohibited this schedule from being saved:
+      </h2>
+      <ul class="list-disc list-inside text-red-300 text-sm">
+        <% @schedule.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
     </div>
   <% end %>
 
-  <div class="bg-gray-900 bg-opacity-50 shadow-xl backdrop-blur-sm border border-gray-800 rounded-xl overflow-hidden">
-    <div class="p-6">
-      <div class="md:grid md:grid-cols-3 md:gap-6">
-        <div class="md:col-span-1">
-          <h3 class="text-lg font-medium text-gray-200">Schedule Details</h3>
-          <p class="mt-1 text-sm text-gray-400">Set up the weekly time slot for this course.</p>
-        </div>
-        <div class="mt-5 md:mt-0 md:col-span-2">
-          <div class="grid grid-cols-6 gap-6">
-            <div class="col-span-6 sm:col-span-3">
-              <%= f.label :courses_id, "Course", class: "block text-sm font-medium text-gray-300 mb-1" %>
-              <%= f.collection_select :courses_id, @courses, :id, :name,
-                  { prompt: "Select a course" },
-                  class: "bg-gray-800 text-gray-200 p-2 block w-full rounded-lg border border-gray-700 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
-            </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Course Selection -->
+    <div>
+      <%= f.label :courses_id, "Course", class: "block text-sm font-medium text-gray-300 mb-2" %>
+      <%= f.collection_select :courses_id, @courses, :id, :name,
+          { prompt: "Select a course" },
+          class: "w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent" %>
+    </div>
 
-            <div class="col-span-6 sm:col-span-3">
-              <%= f.label :week_day, class: "block text-sm font-medium text-gray-300 mb-1" %>
-              <%= f.select :week_day,
-                  ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
-                  { prompt: "Select a day" },
-                  class: "bg-gray-800 text-gray-200 p-2 block w-full rounded-lg border border-gray-700 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
-            </div>
+    <!-- Period Selection -->
+    <div>
+      <%= f.label :period_id, "Period", class: "block text-sm font-medium text-gray-300 mb-2" %>
+      <%= f.collection_select :period_id, Period.all, :id, :period_display,
+          { prompt: "Select a period" },
+          class: "w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent" %>
+    </div>
 
-            <div class="col-span-6 sm:col-span-3">
-              <%= f.label :start_time, class: "block text-sm font-medium text-gray-300 mb-1" %>
-              <%= f.time_field :start_time, class: "bg-gray-800 text-gray-200 p-2 block w-full rounded-lg border border-gray-700 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
-            </div>
+    <!-- Week Day Selection -->
+    <div>
+      <%= f.label :week_day, "Week Day", class: "block text-sm font-medium text-gray-300 mb-2" %>
+      <%= f.select :week_day,
+          Schedule.week_days.map { |day, _| [day.capitalize, day] },
+          { prompt: "Select a day" },
+          class: "w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent" %>
+    </div>
 
-            <div class="col-span-6 sm:col-span-3">
-              <%= f.label :end_time, class: "block text-sm font-medium text-gray-300 mb-1" %>
-              <%= f.time_field :end_time, class: "bg-gray-800 text-gray-200 p-2 block w-full rounded-lg border border-gray-700 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
-            </div>
-
-            <div class="col-span-6">
-              <%= f.label :teacher_ids, "Teachers", class: "block text-sm font-medium text-gray-300 mb-1" %>
-              <%= f.collection_select :teacher_ids, @teachers, :id, ->(t) { "#{t.firstname} #{t.lastname}" },
-                  {},
-                  { multiple: true, class: "bg-gray-800 text-gray-200 p-2 block w-full rounded-lg border border-gray-700 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" } %>
-              <p class="mt-2 text-sm text-gray-400">Select one or more teachers that will give this course.</p>
-            </div>
-          </div>
-        </div>
+    <!-- Time Selection -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <%= f.label :start_time, "Start Time", class: "block text-sm font-medium text-gray-300 mb-2" %>
+        <%= f.time_field :start_time,
+            class: "w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent" %>
       </div>
+      <div>
+        <%= f.label :end_time, "End Time", class: "block text-sm font-medium text-gray-300 mb-2" %>
+        <%= f.time_field :end_time,
+            class: "w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent" %>
+      </div>
+    </div>
+
+    <!-- Teacher Selection -->
+    <div>
+      <%= f.label :teacher_ids, "Teachers", class: "block text-sm font-medium text-gray-300 mb-2" %>
+      <%= f.collection_select :teacher_ids, @teachers, :id, :full_name,
+          { prompt: "Select teachers" },
+          { multiple: true, class: "w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent" } %>
+    </div>
+
+    <!-- School Classes Selection -->
+    <div>
+      <%= f.label :school_class_ids, "School Classes", class: "block text-sm font-medium text-gray-300 mb-2" %>
+      <%= f.collection_select :school_class_ids, @school_classes, :id, :name,
+          { prompt: "Select school classes" },
+          { multiple: true, class: "w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent" } %>
     </div>
   </div>
 
-  <div class="flex justify-end space-x-3">
+  <div class="flex justify-end space-x-4">
     <%= link_to "Cancel", users_dean_schedules_path,
-        class: "inline-flex items-center px-4 py-2 border border-gray-600 rounded-lg text-sm font-medium text-gray-300 bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500 transition duration-200" %>
-    <%= f.submit class: "inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500 transition duration-200" %>
+        class: "px-4 py-2 border border-gray-600 rounded-lg text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" %>
+    <%= f.submit class: "px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" %>
   </div>
 <% end %>

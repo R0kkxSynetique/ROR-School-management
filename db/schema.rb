@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_27_141303) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_27_141304) do
   create_table "addresses", force: :cascade do |t|
     t.string "street"
     t.string "locality"
@@ -172,7 +172,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_27_141303) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "courses_id", null: false
+    t.integer "period_id"
     t.index ["courses_id"], name: "index_schedules_on_courses_id"
+    t.index ["period_id"], name: "index_schedules_on_period_id"
   end
 
   create_table "schedules_teachers", id: false, force: :cascade do |t|
@@ -192,6 +194,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_27_141303) do
     t.integer "section_id", null: false
     t.boolean "archived", default: false, null: false
     t.datetime "archived_at"
+    t.integer "period_id"
+    t.index ["period_id"], name: "index_school_classes_on_period_id"
     t.index ["section_id"], name: "index_school_classes_on_section_id"
     t.index ["uid"], name: "index_school_classes_on_uid", unique: true
   end
@@ -243,7 +247,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_27_141303) do
   add_foreign_key "promotion_asserments", "people", column: "dean_id"
   add_foreign_key "promotion_conditions", "promotion_asserments"
   add_foreign_key "schedules", "courses", column: "courses_id"
+  add_foreign_key "schedules", "periods"
   add_foreign_key "schedules_teachers", "people", column: "teacher_id"
   add_foreign_key "schedules_teachers", "schedules"
+  add_foreign_key "school_classes", "periods"
   add_foreign_key "school_classes", "sections"
 end

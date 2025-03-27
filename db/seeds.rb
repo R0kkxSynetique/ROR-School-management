@@ -195,7 +195,7 @@ teachers.each do |teacher|
   teacher.courses << courses.sample(rand(2..4))
 end
 
-# Create schedules and periods
+# Create schedules
 courses.each do |course|
   rand(2..4).times do
     time_slot = [
@@ -209,24 +209,23 @@ courses.each do |course|
     course_teachers = course.people.where(type: 'Employee')
     next if course_teachers.empty? # Skip if no teachers are assigned
 
-    schedule = Schedule.create!(
+    Schedule.create!(
       start_time: time_slot[:start],
       end_time: time_slot[:end],
       week_day: rand(1..5),
       courses_id: course.id,
       teachers: course_teachers.sample(1) # Always assign at least one teacher
     )
-
-    # Create periods for different school classes
-    school_classes.sample(rand(1..3)).each do |school_class|
-      Period.create!(
-        start_date: Faker::Date.between(from: Date.today, to: 1.month.from_now),
-        end_date: Faker::Date.between(from: 2.months.from_now, to: 6.months.from_now),
-        schedule_id: schedule.id,
-        school_class_id: school_class.id
-      )
-    end
   end
+end
+
+# Create periods (independent of schedules and school classes)
+10.times do
+  start_date = Faker::Date.between(from: Date.today, to: 1.month.from_now)
+  Period.create!(
+    start_date: start_date,
+    end_date: Faker::Date.between(from: start_date + 2.months, to: start_date + 6.months)
+  )
 end
 
 # Assign students to school classes (each student in 1-2 classes)
@@ -248,11 +247,10 @@ courses.each do |course|
       # Create grades for students in the course's school classes
       course.school_classes.flat_map(&:students).uniq.each do |student|
         Grade.create!(
-          value: Faker::Number.between(from: 3.0, to: 6.0).round(1),
-          effective_date: Faker::Date.backward(days: 30),
+          value: rand(3.5..6.0).round(1),
+          effective_date: exam.expected_date,
           examination: exam,
-          student: student,
-          teachers: [ teacher ]
+          student: student
         )
       end
     end
