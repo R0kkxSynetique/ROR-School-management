@@ -83,6 +83,11 @@ class Users::DeanController < ApplicationController
   end
 
   def assign_student
+    if params[:student_id].blank?
+      redirect_to users_dean_new_student_path(@school_class), alert: "Please select a student to assign."
+      return
+    end
+
     student = Student.find(params[:student_id])
     if @dean.assign_student_to_class(student, @school_class)
       redirect_to school_class_path(@school_class), notice: "Student was successfully assigned to class."
