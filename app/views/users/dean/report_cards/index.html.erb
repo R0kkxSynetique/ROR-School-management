@@ -1,15 +1,28 @@
 <% content_for :title, "Generate Report Cards" %>
 
-<div class="container mx-auto px-4 py-8">
-  <div class="bg-gray-900 bg-opacity-50 shadow-xl backdrop-blur-sm border border-gray-800 rounded-xl overflow-hidden">
-    <div class="px-6 py-5 border-b border-gray-700">
+<div class="container px-4 py-8 mx-auto">
+  <div class="sm:flex sm:items-center sm:justify-between mb-8">
+    <div>
       <h1 class="text-3xl font-bold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">
         Generate Report Cards
       </h1>
       <p class="mt-2 text-sm text-gray-400">Select students to generate their report cards</p>
     </div>
+  </div>
 
-    <%= form_tag generate_users_dean_report_cards_path(format: :pdf), method: :post, data: { turbo: false }, target: "_blank", id: "report-cards-form" do %>
+  <div class="bg-gray-900 bg-opacity-50 shadow-xl backdrop-blur-sm border border-gray-800 rounded-xl overflow-hidden">
+    <div class="px-6 py-5 border-b border-gray-700">
+      <div class="flex items-center">
+        <div class="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center mr-3">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <h2 class="text-xl font-semibold text-white">Select Students</h2>
+      </div>
+    </div>
+
+    <%= form_tag generate_users_dean_report_cards_path(format: :pdf), method: :post, target: "_blank", id: "report-cards-form" do %>
       <div class="p-6">
         <div class="flex items-center mb-6">
           <button type="button" id="select-all"
@@ -22,20 +35,20 @@
         </div>
 
         <div class="overflow-x-auto">
-          <table id="students-table" class="min-w-full divide-y divide-gray-700">
-            <thead class="bg-gray-800">
+          <table class="min-w-full divide-y divide-gray-700">
+            <thead>
               <tr>
-                <th class="w-4 p-4"></th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Class</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">First Name</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Last Name</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Username</th>
+                <th scope="col" class="w-4 p-4"></th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Class</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">First Name</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Last Name</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Username</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-gray-700 bg-gray-900 bg-opacity-50">
+            <tbody class="divide-y divide-gray-700">
               <% @school_classes.each do |school_class| %>
                 <% school_class.students.each do |student| %>
-                  <tr class="hover:bg-gray-800 transition-colors duration-200">
+                  <tr class="hover:bg-gray-800 transition duration-150">
                     <td class="w-4 p-4">
                       <%= check_box_tag 'student_ids[]', student.id, false,
                           class: "student-checkbox h-4 w-4 rounded border-gray-600 bg-gray-700 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-gray-900" %>
@@ -46,6 +59,11 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-200"><%= student.username %></td>
                   </tr>
                 <% end %>
+              <% end %>
+              <% if @school_classes.empty? || @school_classes.all? { |sc| sc.students.empty? } %>
+                <tr>
+                  <td colspan="5" class="px-6 py-4 text-sm text-gray-400 text-center">No students found.</td>
+                </tr>
               <% end %>
             </tbody>
           </table>
@@ -62,8 +80,7 @@
           <div>
             <%= submit_tag "Generate Report Cards",
                 class: "inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
-                id: "generate-button",
-                data: { disable_with: "Generating..." } %>
+                id: "generate-button" %>
           </div>
         </div>
       </div>
@@ -73,32 +90,6 @@
 
 <%= javascript_tag do %>
   document.addEventListener('DOMContentLoaded', function() {
-    // Initialize DataTable with dark theme styling
-    const table = new DataTable('#students-table', {
-      pageLength: 10,
-      lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-      order: [[1, 'asc'], [2, 'asc']],
-      columnDefs: [{
-        targets: 0,
-        orderable: false
-      }],
-      // Dark theme styling for DataTables
-      dom: '<"flex items-center justify-between mb-4"<"text-gray-300"l><"text-gray-300"f>>rtip',
-      language: {
-        lengthMenu: "_MENU_ per page",
-        info: "Showing _START_ to _END_ of _TOTAL_ students",
-        infoEmpty: "No students to show",
-        infoFiltered: "(filtered from _MAX_ total students)",
-        search: "Search:",
-        zeroRecords: "No matching students found"
-      }
-    });
-
-    // Add dark theme classes to DataTables elements
-    document.querySelectorAll('.dataTables_wrapper select, .dataTables_wrapper input[type="search"]').forEach(el => {
-      el.classList.add('bg-gray-800', 'text-gray-200', 'border-gray-700', 'rounded-lg', 'focus:border-indigo-500', 'focus:ring-indigo-500');
-    });
-
     const form = document.getElementById('report-cards-form');
     const generateButton = document.getElementById('generate-button');
     const errorMessage = document.getElementById('error-message');

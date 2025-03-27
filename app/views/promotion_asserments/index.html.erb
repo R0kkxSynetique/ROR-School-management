@@ -1,86 +1,84 @@
 <% content_for :title, "Promotion Assessments" %>
 
-<div class="container mx-auto px-4 py-8">
-  <div class="bg-gray-900 bg-opacity-50 shadow-xl backdrop-blur-sm border border-gray-800 rounded-xl overflow-hidden">
-    <div class="px-6 py-5 border-b border-gray-700 flex items-center justify-between">
-      <div>
-        <h1 class="text-3xl font-bold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">
-          Promotion Assessments
-        </h1>
-        <p class="mt-2 text-sm text-gray-400">Manage promotion requirements and conditions for different sections</p>
-      </div>
+<div class="container px-4 py-8 mx-auto">
+  <div class="sm:flex sm:items-center sm:justify-between mb-8">
+    <div>
+      <h1 class="text-3xl font-bold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">
+        Promotion Assessments
+      </h1>
+      <p class="mt-2 text-sm text-gray-400">Manage promotion requirements and conditions for different sections</p>
+    </div>
+    <div class="mt-4 sm:mt-0">
       <%= link_to new_promotion_asserment_path,
-          class: "inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500 transition duration-200" do %>
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          class: "inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500 transition duration-200 transform hover:scale-105" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
         New Assessment
       <% end %>
     </div>
+  </div>
 
-    <div class="border-t border-gray-700">
-      <% if @promotion_asserments.any? %>
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-700">
-            <thead class="bg-gray-800">
-              <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Sections</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Effective Date</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
-                <th scope="col" class="relative px-6 py-3">
-                  <span class="sr-only">Actions</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-700 bg-gray-900 bg-opacity-50">
-              <% @promotion_asserments.each do |asserment| %>
-                <tr class="hover:bg-gray-800 transition-colors duration-200">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-200"><%= asserment.name %></td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    <%= asserment.sections.map(&:name).join(", ") %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                    <%= asserment.effective_date.strftime("%B %d, %Y") %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm">
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                      <%= asserment.active? ? 'bg-green-900 text-green-200' : 'bg-gray-700 text-gray-200' %>">
-                      <%= asserment.active? ? 'Active' : 'Inactive' %>
-                    </span>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
-                    <%= link_to edit_promotion_asserment_path(asserment),
-                        class: "inline-flex items-center px-3 py-1.5 border border-gray-600 rounded-lg text-sm font-medium text-gray-300 bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500 transition duration-200" do %>
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                      </svg>
-                    <% end %>
+  <div class="bg-gray-900 bg-opacity-50 shadow-xl backdrop-blur-sm border border-gray-800 rounded-xl overflow-hidden">
+    <div class="px-6 py-5 border-b border-gray-700">
+      <div class="flex items-center">
+        <div class="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center mr-3">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+          </svg>
+        </div>
+        <h2 class="text-xl font-semibold text-white">All Assessments</h2>
+      </div>
+    </div>
 
-                    <%= link_to promotion_asserment_path(asserment),
-                        class: "inline-flex items-center px-3 py-1.5 border border-gray-600 rounded-lg text-sm font-medium text-gray-300 bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500 transition duration-200" do %>
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                      </svg>
-                    <% end %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      <% else %>
-        <div class="px-6 py-8 text-center">
-          <div class="h-12 w-12 mx-auto rounded-full bg-gray-800 flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-          </div>
-          <h3 class="text-sm font-medium text-gray-300">No assessments found</h3>
-          <p class="mt-1 text-sm text-gray-400">Get started by creating a new promotion assessment.</p>
-        </div>
-      <% end %>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-700">
+        <thead>
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Sections</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Effective Date</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
+            <th scope="col" class="relative px-6 py-3">
+              <span class="sr-only">Actions</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-700">
+          <% @promotion_asserments.each do |promotion_asserment| %>
+            <tr class="hover:bg-gray-800 transition duration-150">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-200"><%= promotion_asserment.name %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-200"><%= promotion_asserment.sections.map(&:name).join(", ") %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-200"><%= promotion_asserment.effective_date.strftime("%B %d, %Y") %></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-200">
+                <% status_class = promotion_asserment.active? ? "bg-green-900 text-green-200" : "bg-red-900 text-red-200" %>
+                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <%= status_class %>">
+                  <%= promotion_asserment.active? ? "Active" : "Inactive" %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <div class="flex items-center justify-end space-x-3">
+                  <%= link_to edit_promotion_asserment_path(promotion_asserment), class: "text-indigo-400 hover:text-indigo-300 inline-flex items-center" do %>
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  <% end %>
+                  <%= button_to promotion_asserment_path(promotion_asserment), method: :delete, class: "text-red-400 hover:text-red-300 inline-flex items-center" do %>
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+          <% if @promotion_asserments.empty? %>
+            <tr>
+              <td colspan="5" class="px-6 py-4 text-sm text-gray-400 text-center">No promotion assessments found.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
