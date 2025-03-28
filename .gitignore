@@ -32,3 +32,10 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+*.bkp
+
+2
+
+/app/assets/builds/*
+!/app/assets/builds/.keep

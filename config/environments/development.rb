@@ -28,6 +28,25 @@ Rails.application.configure do
   # Change to :null_store to avoid any caching.
   config.cache_store = :memory_store
 
+  # Devise mailer configuration
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  
+  # Infomaniak SMTP configuration
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: 'mail.infomaniak.ch',
+    port: 465,
+    domain: 'r0kkxsynetique.ch',
+    user_name: 'info@r0kkxsynetique.ch',
+    password: 'SuHznT5k7l5vfp',
+    authentication: :login,
+    ssl: true,
+  }
+  
+  # Enable email delivery errors to be raised
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 

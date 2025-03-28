@@ -1,0 +1,11 @@
+<%% if resource.errors.empty? %>
+  <%= turbo_stream.replace "devise_error_messages" do %>
+    <div class="notice">
+      <%= I18n.t("devise.passwords.send_instructions") %>
+    </div>
+  <% end %>
+<%% else %>
+  <%= turbo_stream.replace "devise_error_messages" do %>
+    <%= render "devise/shared/error_messages", resource: resource %>
+  <% end %>
+<%% end %>

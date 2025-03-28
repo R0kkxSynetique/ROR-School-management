@@ -1,0 +1,77 @@
+<%= form_with(model: [:users, :dean, @schedule], class: "space-y-6") do |f| %>
+  <% if @schedule.errors.any? %>
+    <div class="bg-red-900 bg-opacity-50 border border-red-700 rounded-lg p-4">
+      <h2 class="text-red-400 text-sm font-medium mb-2">
+        <%= pluralize(@schedule.errors.count, "error") %> prohibited this schedule from being saved:
+      </h2>
+      <ul class="list-disc list-inside text-red-300 text-sm">
+        <% @schedule.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Course Selection -->
+    <div>
+      <%= f.label :courses_id, "Course", class: "block text-sm font-medium text-gray-300 mb-2" %>
+      <%= f.collection_select :courses_id, @courses, :id, :name,
+          { prompt: "Select a course" },
+          class: "w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent" %>
+    </div>
+
+    <!-- Period Selection -->
+    <div>
+      <%= f.label :period_id, "Period", class: "block text-sm font-medium text-gray-300 mb-2" %>
+      <%= f.collection_select :period_id, Period.all, :id, :period_display,
+          { prompt: "Select a period" },
+          class: "w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent" %>
+    </div>
+
+    <!-- Week Day Selection -->
+    <div>
+      <%= f.label :week_day, "Week Day", class: "block text-sm font-medium text-gray-300 mb-2" %>
+      <%= f.select :week_day,
+          Schedule.week_days.map { |day, _| [day.capitalize, day] },
+          { prompt: "Select a day" },
+          class: "w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent" %>
+    </div>
+
+    <!-- Time Selection -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <%= f.label :start_time, "Start Time", class: "block text-sm font-medium text-gray-300 mb-2" %>
+        <%= f.time_field :start_time,
+            class: "w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent" %>
+      </div>
+      <div>
+        <%= f.label :end_time, "End Time", class: "block text-sm font-medium text-gray-300 mb-2" %>
+        <%= f.time_field :end_time,
+            class: "w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent" %>
+      </div>
+    </div>
+
+    <!-- Teacher Selection -->
+    <div>
+      <%= f.label :teacher_ids, "Teachers", class: "block text-sm font-medium text-gray-300 mb-2" %>
+      <%= f.collection_select :teacher_ids, @teachers, :id, :full_name,
+          { prompt: "Select teachers" },
+          { multiple: true, class: "w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent" } %>
+    </div>
+
+    <!-- School Classes Selection -->
+    <div>
+      <%= f.label :school_class_ids, "School Classes", class: "block text-sm font-medium text-gray-300 mb-2" %>
+      <%= f.collection_select :school_class_ids, @school_classes, :id, :name,
+          { prompt: "Select school classes" },
+          { multiple: true, class: "w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent" } %>
+    </div>
+  </div>
+
+  <div class="flex justify-end space-x-4">
+    <%= link_to "Cancel", users_dean_schedules_path,
+        class: "px-4 py-2 border border-gray-600 rounded-lg text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" %>
+    <%= f.submit class: "px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" %>
+  </div>
+<% end %>
